@@ -81,10 +81,8 @@ import cz.cuni.mff.ufal.lindat.utilities.interfaces.IFunctionalities;
 public class PiwikPDFExporter  {
 
     /** Piwik configurations */
-    private static String PIWIK_API_URL;
-    private static String PIWIK_AUTH_TOKEN;
-    private static String PIWIK_SITE_ID;
     private static String PIWIK_REPORTS_OUTPUT_PATH;
+    private static String DSPACE_URL;
 
     
 	private static SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -102,10 +100,8 @@ public class PiwikPDFExporter  {
 		
 	public static void initialize() {
         DSpaceApi.load_dspace();        
-        PIWIK_API_URL = ConfigurationManager.getProperty("lr", "lr.statistics.api.url");
-        PIWIK_AUTH_TOKEN = ConfigurationManager.getProperty("lr", "lr.statistics.api.auth.token");
-        PIWIK_SITE_ID = ConfigurationManager.getProperty("lr", "lr.statistics.api.site_id");
         PIWIK_REPORTS_OUTPUT_PATH = ConfigurationManager.getProperty("lr", "lr.statistics.report.path");
+        DSPACE_URL = ConfigurationManager.getProperty("dspace.url");
 	}
 	
 	public static void generateReports() throws SQLException {
@@ -176,28 +172,14 @@ public class PiwikPDFExporter  {
 		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		Date lastDay = cal.getTime();
 		
-		String viewsReportURL = PIWIK_API_URL + "index.php"
-											+ "?module=API"
-											+ "&method=API.get"
-											+ "&idSite=" + PIWIK_SITE_ID
-											+ "&period=day"
-											+ "&date=" + inputDateFormat.format(firstDay) + "," + inputDateFormat.format(lastDay)
-											+ "&token_auth=" + PIWIK_AUTH_TOKEN
-											+ "&format=xml"
-											+ "&segment=pageUrl=@" + item.getHandle();
+		String viewsReportURL = DSPACE_URL + "/handle/" + item.getHandle() + "/piwik?module=API&method=API.get&period=day&format=xml"; 
 		
-		String countryReportURL = PIWIK_API_URL + "index.php"
+		String countryReportURL = DSPACE_URL + "/handle/" + item.getHandle() + "/piwik"
 												+ "?module=API"
 												+ "&method=UserCountry.getCountry"
-												+ "&idSite=" + PIWIK_SITE_ID
 												+ "&period=month"
 												+ "&date=" + inputDateFormat.format(firstDay)												
-												+ "&expanded=1"
-												+ "&token_auth=" + PIWIK_AUTH_TOKEN
-												+ "&filter_limit=10"
-												+ "&format=xml"
-												+ "&segment=pageUrl=@" + item.getHandle();
-												
+												+ "&format=xml";												
 		
 		String viewsXML = readFromURL(viewsReportURL);
 		String countriesXML = readFromURL(countryReportURL);
