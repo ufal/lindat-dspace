@@ -121,6 +121,11 @@ public class PiwikPDFExporter  {
 		List<PiwikReport> piwikReports = functionalityManager.getAllPiwikReports();
 		functionalityManager.closeSession();
 		
+		File outputDir = new File(PIWIK_REPORTS_OUTPUT_PATH);
+		if(!outputDir.exists()) {
+			outputDir.mkdirs();
+		}
+		
 		HashSet<Item> done = new HashSet<Item>();
 		
 		for(PiwikReport pr : piwikReports) {
