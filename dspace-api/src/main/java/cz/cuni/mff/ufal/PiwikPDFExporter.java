@@ -84,10 +84,10 @@ public class PiwikPDFExporter  {
     private static String PIWIK_REPORTS_OUTPUT_PATH;
 
     /** Piwik configurations */
-    private static final String PIWIK_API_URL;
-    private static final String PIWIK_AUTH_TOKEN;
-    private static final String PIWIK_SITE_ID;
-    private static final String PIWIK_DOWNLOAD_SITE_ID;
+    private static String PIWIK_API_URL;
+    private static String PIWIK_AUTH_TOKEN;
+    private static String PIWIK_SITE_ID;
+    private static String PIWIK_DOWNLOAD_SITE_ID;
 
     
 	private static SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
