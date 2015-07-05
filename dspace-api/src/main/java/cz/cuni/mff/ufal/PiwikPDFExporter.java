@@ -347,8 +347,6 @@ public class PiwikPDFExporter  {
         	renderer.setSeriesShape(1, circle);
         	renderer.setSeriesPaint(0, new Color(212, 40, 30));
         	renderer.setSeriesPaint(1, new Color(30, 120, 180));
-        	renderer.setSeriesStroke(0);
-        	renderer.setSeriesStroke(1);
         }
         DateAxis xAxis = (DateAxis) plot.getDomainAxis();
         xAxis.setDateFormatOverride(outputDateFormat);
