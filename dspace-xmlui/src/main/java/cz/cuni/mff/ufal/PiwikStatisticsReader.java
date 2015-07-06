@@ -111,7 +111,7 @@ public class PiwikStatisticsReader extends AbstractReader {
 
             EPerson eperson = context.getCurrentUser();
             
-            if(!AuthorizeManager.isAdmin(context)) {
+            if(!(AuthorizeManager.isAdmin(context) || item.getSubmitter().getID()==eperson.getID())) {
             	throw new AuthorizeException();
             }
             
