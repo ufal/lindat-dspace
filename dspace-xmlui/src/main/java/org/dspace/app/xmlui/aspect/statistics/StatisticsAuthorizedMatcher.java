@@ -121,8 +121,14 @@ public class StatisticsAuthorizedMatcher extends AbstractLogEnabled implements M
     public boolean isMemberOfGroup(Group g, EPerson e) {
     	if(g.isMember(e)) return true;
     	for(Group sg : g.getMemberGroups()) {
-    		if(sg.isMember(e))
+    		// this is a hack .. default Authenticated group needs to be 
+    		if(sg.getName().equalsIgnoreCase("Authenticated")) {
     			return true;
+    		}
+    		else
+    		if(sg.isMember(e)) {
+    			return true;
+    		}
     	}
     	return false;
     }
