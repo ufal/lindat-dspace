@@ -91,6 +91,7 @@ public class PiwikPDFExporter  {
     private static String PIWIK_SITE_ID;
     private static String PIWIK_DOWNLOAD_SITE_ID;
 
+    private static String LINDAT_LOGO;
     
 	private static SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private static SimpleDateFormat outputDateFormat = new SimpleDateFormat("MMM-dd");
@@ -111,7 +112,8 @@ public class PiwikPDFExporter  {
         PIWIK_API_URL = ConfigurationManager.getProperty("lr", "lr.statistics.api.url");
         PIWIK_AUTH_TOKEN = ConfigurationManager.getProperty("lr", "lr.statistics.api.auth.token");
         PIWIK_SITE_ID = ConfigurationManager.getProperty("lr", "lr.statistics.api.site_id");
-        PIWIK_DOWNLOAD_SITE_ID = ConfigurationManager.getProperty("lr", "lr.tracker.bitstream.site_id");        
+        PIWIK_DOWNLOAD_SITE_ID = ConfigurationManager.getProperty("lr", "lr.tracker.bitstream.site_id");
+        LINDAT_LOGO = ConfigurationManager.getProperty("lr", "lr.lindat.logo.mono");
 	}
 	
 	public static void generateReports() throws SQLException {
@@ -390,7 +392,7 @@ public class PiwikPDFExporter  {
 	    FONT[7] = new Font(FontFamily.HELVETICA, 10, Font.BOLD);
 
 	    
-	    Image logo = Image.getInstance(new URL("https://lindat.mff.cuni.cz/images/lindat-common/public/img/lindat-logo-mono.png"));
+	    Image logo = Image.getInstance(LINDAT_LOGO);
 	    logo.scaleAbsolute(82, 48);
 	    logo.setAlignment(Image.RIGHT);
 
