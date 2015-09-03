@@ -129,7 +129,7 @@ public class HandleResource extends Resource {
 
     private FeaturedServices getFeaturedServices(org.dspace.content.Item item) throws SQLException {
         FeaturedServices featuredServices = new FeaturedServices();
-        Metadatum[] mds = item.getMetadataByMetadataString("local.featured.service");
+        Metadatum[] mds = item.getMetadataByMetadataString("local.featuredService.*");
         if (mds != null) {
             for (Metadatum md : mds) {
                 String val = md.value;

@@ -15,8 +15,8 @@ public class FeaturedServices {
         featuredServiceList = new ArrayList<>();
     }
 
-    public void add(String name, String url){
-        featuredServiceList.add(new FeaturedService(name, url));
+    public void add(String name, String url, String description){
+        featuredServiceList.add(new FeaturedService(name, url, description));
     }
 }
 
@@ -24,11 +24,13 @@ public class FeaturedServices {
 class FeaturedService{
     public String name;
     public String url;
+    public String description;
 
     public FeaturedService() {}
 
-    public FeaturedService(String name, String url){
+    public FeaturedService(String name, String url, String description){
         this.name = name;
         this.url = url;
+        this.description = description;
     }
 }
