@@ -68,6 +68,8 @@
                         <exclude>**/DD_belated*</exclude>
                         <exclude>**/detectmobile*</exclude>
                         <exclude>**/sc-mobile*</exclude>
+                        <exclude>**/themes/UFAL/**</exclude>
+                        <exclude>**/themes/UFALHome/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

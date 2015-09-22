@@ -1,3 +1,10 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
 package cz.cuni.mff.ufal.dspace.b2safe;
 
 import fr.cines.eudat.repopack.b2safe_rp_core.DataObject;
