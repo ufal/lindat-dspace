@@ -4,8 +4,6 @@
  * tree and available online at
  *
  * http://www.dspace.org/license/
- *
- * by lindat-dev team
  */
 package cz.cuni.mff.ufal.health;
 

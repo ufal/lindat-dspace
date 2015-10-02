@@ -1,44 +1,57 @@
 language: java
-sudo: required
+sudo: false
+
+env:
+    - MAVEN_OPTS=-Xmx1024M
 
 addons:
-  postgresql: "9.4"
+    apt:
+        packages:
+            - cloc
 
 before_install:
-  - sudo rm /etc/mavenrc
-  - export MAVEN_OPTS="-Dmaven.repo.local=/home/travis/.m2/repository -Xmx2048M -XX:MaxPermSize=256m"
+  # https://github.com/travis-ci/travis-ci/issues/4629
+  - sed -i.bak -e 's|https://nexus.codehaus.org/snapshots/|https://oss.sonatype.org/content/repositories/codehaus-snapshots/|g' ~/.m2/settings.xml
   -     echo "########################"
   - whoami
   - java -version
   - pwd
+  - free -m -t
   - mvn help:system
+  - free -m -t
   - export FS=`pwd`
-  - sudo apt-get install -qq cloc
   -     echo "########################"
-  - cloc ../
+  - if which cloc; then cloc ../; else echo "No cloc"; fi
   -     echo "########################"
 
-install:
-  - echo "Update settings"
-  - cd $FS/utilities/project_helpers
-  - sed -i'' 's/tomcat.(TOMCAT_VERSION)/travis/' ./config/variable.makefile.example
-  - sed -i'' 's/lr.common.theme = /lr.common.theme = \/tmp\/dspace/' ./config/local.conf.dist
-  - sed -i'' 's/dspace.install.dir = /dspace.install.dir = \/tmp\/dspace/' ./config/local.conf.dist
-  - cd $FS/utilities/project_helpers/config
-  - cp local.conf.dist ../sources/local.properties
-  - cd $FS/utilities/project_helpers/scripts
-  - echo "Creating dspace DB user and initialising databases"
-  - sudo -u postgres createuser --superuser dspace
-  - make create_databases
-  - echo "Installing prerequisites"
-  - make install_libs
-  - make new_deploy | grep -v "Download"
-  - make print_message
+# Skip install stage, as we'll do it below
+install: "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
 
+# Two stage Build and Test
+# 1. Install & Unit Test APIs
+# 2. Assemble DSpace
 script:
-  - make test_dspace_database
-  - make test_utilities_database
-  - cd $FS/ && mvn -Dmaven.test.skip=false -Dtest=cz.cuni.mff.ufal.dspace.**.*Test,cz.cuni.mff.ufal.*Test -DfailIfNoTests=false test | grep -v "Download"
-  - cd $FS/utilities/project_helpers/scripts
-  - make tests
-  - #make selenium_tests || echo "Tests failed"
+# 1. [Install & Unit Test] Check source code licenses and run source code Unit Tests
+#    (This explicitly skips building the 'dspace' assembly module, since we only want to do that ONCE.)
+#        license:check => Validate all source code license headers
+#        -Dmaven.test.skip=false => Enable DSpace Unit Tests
+#        -P !dspace => SKIP full DSpace assembly (will do below)
+#        -B => Maven batch/non-interactive mode (recommended for CI)
+#        -V => Display Maven version info before build
+#- "mvn clean install license:check -Dmaven.test.skip=false -P !dspace -B -V"
+# 2. [Assemble DSpace] Ensure assembly process works (from [src]/dspace/), including Mirage 2
+#        -Dmirage2.on=true => Build Mirage2
+#        -Dmirage2.deps.included=false => Don't include Mirage2 build dependencies (We installed them in before_install)
+#        -P !assembly => SKIP the actual building of [src]/dspace/dspace-installer (as it can be memory intensive)
+#- "cd dspace && mvn package -Dmirage2.on=false -P !assembly -B -V"
+
+- "cd $FS/utilities/project_helpers/config"
+- "cp local.conf.dist ../sources/local.properties"
+- "cd $FS"
+- "free -m -t"
+- "mvn clean package -Dmaven.test.skip=true -P !dspace -B -V"
+- "free -m -t"
+- "mvn install license:check -Dmaven.test.skip=false -P !dspace -B -V"
+- "free -m -t"
+- "mvn package -P dspace,!assembly,!dspace-xmlui-mirage2 -B -V"
+- "free -m -t"
