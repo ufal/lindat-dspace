@@ -16,7 +16,9 @@ before_install:
   - whoami
   - java -version
   - pwd
+  - free -m -t
   - mvn help:system
+  - free -m -t
   - export FS=`pwd`
   -     echo "########################"
   - if which cloc; then cloc ../; else echo "No cloc"; fi
@@ -46,6 +48,10 @@ script:
 - "cd $FS/utilities/project_helpers/config"
 - "cp local.conf.dist ../sources/local.properties"
 - "cd $FS"
+- "free -m -t"
 - "mvn clean package -Dmaven.test.skip=true -P !dspace -B -V"
+- "free -m -t"
 - "mvn install license:check -Dmaven.test.skip=false -P !dspace -B -V"
+- "free -m -t"
 - "mvn package -P dspace,!assembly,!dspace-xmlui-mirage2 -B -V"
+- "free -m -t"
