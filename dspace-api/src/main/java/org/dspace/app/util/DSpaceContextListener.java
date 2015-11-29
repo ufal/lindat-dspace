@@ -8,13 +8,20 @@
 package org.dspace.app.util;
 
 import org.dspace.core.ConfigurationManager;
+import org.dspace.services.ConfigurationService;
 import org.dspace.storage.rdbms.DatabaseManager;
+import org.dspace.utils.DSpace;
 import org.apache.log4j.Logger;
+
+import cz.cuni.mff.ufal.lindat.utilities.interfaces.IFunctionalities;
 
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
 
 import java.beans.Introspector;
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Driver;
@@ -133,6 +140,21 @@ public class DSpaceContextListener implements ServletContextListener
         } catch (IllegalAccessException ex) {
             event.getServletContext().log("Can't create webapp MBean:  " + ex.getMessage());
         }
+        
+        
+        
+    	try{
+    		String className = ConfigurationManager.getProperty("lr", "lr.utilities.functionalityManager.class");
+			Class<IFunctionalities> functionalities = (Class<IFunctionalities>) Class.forName(className);
+			Method init = functionalities.getMethod("init", String.class);
+			ConfigurationService configurationService = new DSpace().getConfigurationService();
+			String lr_cfg = configurationService.getProperty("dspace.dir") + File.separator + "config/modules/lr.cfg";
+			init.invoke(null, lr_cfg);
+    	} catch(Exception ex) {
+    		log.error(ex.getMessage(), ex);
+    	}
+        
+        
     }
 
     /**
@@ -173,3 +195,4 @@ public class DSpaceContextListener implements ServletContextListener
         }
     }
 }
+
