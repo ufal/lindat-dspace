@@ -1,5 +1,6 @@
 package cz.cuni.mff.ufal.lindat.utilities;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -36,13 +37,27 @@ import cz.cuni.mff.ufal.lindat.utilities.units.Variables;
 public class HibernateFunctionalityManager implements IFunctionalities {
 
 	private static Logger log = Logger.getLogger(HibernateFunctionalityManager.class);
-
-	HibernateUtil hibernateUtil = new HibernateUtil();
+	static boolean initialized = false;
+	
+	HibernateUtil hibernateUtil = new HibernateUtil();	
+	
+	public HibernateFunctionalityManager() {
+	}
 	
 	public HibernateFunctionalityManager(String configuration_file) throws IOException {
-		init(configuration_file);
+		if(!initialized) {
+			init(configuration_file);
+		}
 	}
-
+	
+	public synchronized static void init(String configuration_file) throws IOException {
+		if(!initialized) {
+			Variables.init(configuration_file);		
+			HibernateUtil.init();
+			initialized = true;
+		}
+	}	
+	
 	@Override
 	public void setErrorMessage(String message) {
 		Variables.setErrorMessage(message);
@@ -64,10 +79,6 @@ public class HibernateFunctionalityManager implements IFunctionalities {
 		if (property != null)
 			return property;
 		return "";
-	}
-
-	public static void init(String configuration_file) throws IOException {
-		Variables.init(configuration_file);
 	}
 
 	public boolean isFunctionalityEnabled(String functionalityName) {
@@ -833,6 +844,7 @@ public class HibernateFunctionalityManager implements IFunctionalities {
 	}
 
 }
+
 
 
 
