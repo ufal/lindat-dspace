@@ -44,24 +44,8 @@
 		<dependency>
 			<groupId>B2SAFE-repository-package</groupId>
 			<artifactId>b2safe_rp_pilot</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.5-jar-with-dependencies</version>
 		</dependency>
-		<dependency>
-			<groupId>com.claymoresystems</groupId>
-			<artifactId>puretls</artifactId>
-			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>org.globus.jglobus</groupId>
-			<artifactId>cog-jglobus</artifactId>
-			<type>jar</type>
-			<exclusions>
-				<exclusion>
-					<artifactId>jce</artifactId>
-					<groupId>org.bouncycastle</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>		
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-api</artifactId>
