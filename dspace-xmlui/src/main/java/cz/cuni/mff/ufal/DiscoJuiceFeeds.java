@@ -17,12 +17,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.acting.AbstractAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.log4j.Logger;
@@ -96,6 +91,7 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
     }
 
     public static void update(){
+        log.info("DiscoJuiceFeeds::update called");
         lock.writeLock().lock();
         try{
            feedsContent = createFeedsContent();
@@ -169,12 +165,37 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
         old_value = (old_value == null) ? "true" : old_value;
         System.setProperty("jsse.enableSNIExtension", old_value);
 
+        //obtain feeds from discojuice cdn
         Map<String, JSONObject> discoEntities = Arrays.asList(feedsConfig.split(",")).parallelStream()
                 .flatMap(feed -> DiscoJuiceFeeds.downloadJSON(discojuiceURL + feed.trim()))
                 .filter((JSONObject entity) -> {
                     String entityID = (String)entity.get("entityID");
                     return shibDiscoEntities.containsKey(entityID);
                 })
+                //again ignore dupes and just use first
+                .collect(Collectors.toMap(entity -> (String)entity.get("entityID"), Function.identity(), (oldValue, newValue) -> oldValue));
+
+        //take geo, country & icon from discoEntities and add it to shibEntity
+        discoEntities.values().stream()
+                .forEach(entity ->{
+                    String entityID = (String)entity.get("entityID");
+                    JSONObject geo = (JSONObject) entity.get("geo");
+                    String icon = (String) entity.get("icon");
+                    String country = (String) entity.get("country");
+                    JSONObject shibEntity = shibDiscoEntities.get(entityID);
+                    if(geo != null){
+                        shibEntity.put("geo", geo);
+                    }
+                    if(icon != null){
+                        shibEntity.put("icon", icon);
+                    }
+                    if(country != null){
+                        shibEntity.put("country", country);
+                    }
+                });
+
+        //update country if necessary, collect to JSONArray and return as string
+        return shibDiscoEntities.values().stream()
                 .map(entity -> {
                     String entityID = (String)entity.get("entityID");
                     if(rewriteCountries.contains(entityID)){
@@ -185,26 +206,7 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
                     }
                     return entity;
                 })
-                //again ignore dupes and just use first
-                .collect(Collectors.toMap(entity -> (String)entity.get("entityID"), Function.identity(), (oldValue, newValue) -> oldValue));
-
-        Map<String, JSONObject> onlyInShib = shibDiscoEntities.entrySet().stream()
-                .filter(entry -> discoEntities.containsKey(entry.getKey())) //filter by entityID
-                .map(entry -> {
-                    entry.getValue().put("country", guessCountry(entry.getValue()));
-                    return entry;
-                })
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        discoEntities.putAll(onlyInShib);
-        String fromShib = onlyInShib.keySet().stream().collect(Collectors.joining("\n"));
-
-        //log shibboleth only entries
-        if(fromShib != null && fromShib.length()>0){
-            log.info("The following entities were added from shibboleth disco feed.\n" + fromShib.toString());
-        }
-
-        return discoEntities.values().stream().collect(Collectors.toCollection(JSONArray::new)).toJSONString();
+                .collect(Collectors.toCollection(JSONArray::new)).toJSONString();
     }
 
     private static Stream<JSONObject> downloadJSON(String url){
@@ -263,7 +265,8 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
     //For testing
     public static void main(String[] args) throws Exception{
         long startTime = System.currentTimeMillis();
-        String feeds = DiscoJuiceFeeds.createFeedsContent("edugain, dfn, cesnet, surfnet2, haka, kalmar", "https://lindat.mff.cuni.cz/Shibboleth.sso/DiscoFeed");
+        String feeds = DiscoJuiceFeeds.createFeedsContent("edugain, dfn, cesnet, surfnet2, haka, kalmar", "https://ufal-point-dev.ms.mff.cuni.cz/Shibboleth.sso/DiscoFeed");
+        //String feeds = DiscoJuiceFeeds.createFeedsContent("edugain, dfn, cesnet, surfnet2, haka, kalmar", "https://lindat.mff.cuni.cz/Shibboleth.sso/DiscoFeed");
         long endTime = System.currentTimeMillis();
         System.out.println((endTime - startTime)/1000);
         //System.out.println(feeds);
