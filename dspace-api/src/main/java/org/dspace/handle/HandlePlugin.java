@@ -608,16 +608,16 @@ class ResolvedHandle {
 
     public void setDead(String handle) {
         //find URL field
-        for(HandleValue hv : values){
+        int j = -1;
+        for(int i = 0; i < values.size(); i++){
+            HandleValue hv = values.get(i);
             if(hv.hasType(Util.encodeString("URL"))){
-                //duplicate old url as last working URL
-                HandleValue deadURL = hv.duplicate();
-                deadURL.setType(Util.encodeString("LAST_WORKING_URL"));
-                values.add(deadURL);
-                //change url to noredirect
-                hv.setData(Util.encodeString(HandleManager.getCanonicalForm(handle) + "?noredirect"));
+                j = i;
                 break;
             }
+        }
+        if(j > -1) {
+            values.remove(j);
         }
     }
 }
