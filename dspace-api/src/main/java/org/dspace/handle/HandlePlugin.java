@@ -298,6 +298,9 @@ public class HandlePlugin implements HandleStorage
                 rh = new ResolvedHandle(url, dso);
             }
             log.info(String.format("Handle [%s] resolved to [%s]", handle, url));
+            if(HandleManager.isDead(context, handle)){
+                rh.setDead(handle);
+            }
 
             return rh.toRawValue();
         }
@@ -603,4 +606,18 @@ class ResolvedHandle {
         return rawValues;
     }
 
+    public void setDead(String handle) {
+        //find URL field
+        for(HandleValue hv : values){
+            if(hv.hasType(Util.encodeString("URL"))){
+                //duplicate old url as last working URL
+                HandleValue deadURL = hv.duplicate();
+                deadURL.setType(Util.encodeString("LAST_WORKING_URL"));
+                values.add(deadURL);
+                //change url to noredirect
+                hv.setData(Util.encodeString(HandleManager.getCanonicalForm(handle) + "?noredirect"));
+                break;
+            }
+        }
+    }
 }

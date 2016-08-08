@@ -647,4 +647,13 @@ public class HandleManager
                 handlePrefix.endsWith("/") ? "" : "/").append(id).toString();
     }
 
+    public static boolean isDead(Context context, String handle) throws SQLException {
+        String baseHandle = stripPartIdentifier(handle);
+
+        TableRow dbhandle = findHandleInternal(context, baseHandle);
+
+        return dbhandle.getBooleanColumn("dead");
+
+    }
+
 }
