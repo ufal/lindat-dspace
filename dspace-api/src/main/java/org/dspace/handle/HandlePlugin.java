@@ -608,16 +608,17 @@ class ResolvedHandle {
 
     public void setDead(String handle) {
         //find URL field
-        int j = -1;
-        for(int i = 0; i < values.size(); i++){
-            HandleValue hv = values.get(i);
+        for(HandleValue hv : values){
             if(hv.hasType(Util.encodeString("URL"))){
-                j = i;
+                //duplicate old url as last working URL
+                HandleValue deadURL = hv.duplicate();
+                deadURL.setType(Util.encodeString("ORIG_URL"));
+                deadURL.setIndex(idx++);
+                values.add(deadURL);
+                //change url to our display page
+                hv.setData(Util.encodeString("http://hdl.handle.net/11346/SHORTREF-PR6O#hdl=" + handle));
                 break;
             }
-        }
-        if(j > -1) {
-            values.remove(j);
         }
     }
 }
