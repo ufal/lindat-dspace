@@ -10,6 +10,7 @@
 
     <!-- repository name -->
     <xsl:variable name="dspace.name" select="confman:getProperty('dspace.name')"/>
+    <xsl:variable name="authorsLimitLT" select="4"/>
 
     <xsl:output omit-xml-declaration="yes" method="xml" indent="yes" cdata-section-elements="h:html"/>
     <xsl:template match="/">
@@ -54,13 +55,27 @@
     </xsl:template>
 
     <xsl:template name="authors">
-        <xsl:if test="doc:metadata/doc:element[@name='dc']/doc:element[@name='contributor']/doc:element[@name='author']/doc:element/doc:field[@name='value'] | doc:metadata/doc:element[@name='dc']/doc:element[@name='contributor']/doc:element[@name='other']/doc:element/doc:field[@name='value']">
+        <xsl:variable name="authorsCount" select="count(doc:metadata/doc:element[@name='dc']/doc:element[@name='contributor']/doc:element[@name='author']/doc:element/doc:field[@name='value'] | doc:metadata/doc:element[@name='dc']/doc:element[@name='contributor']/doc:element[@name='other']/doc:element/doc:field[@name='value'])"/>
+        <xsl:if test="$authorsCount &gt; 0">
+            <!-- The select is limited to max $authorsLimitLT - 1 nodes -->
             <xsl:for-each select="doc:metadata/doc:element[@name='dc']/doc:element[@name='contributor']/doc:element[@name='author']/doc:element/doc:field[@name='value'] | doc:metadata/doc:element[@name='dc']/doc:element[@name='contributor']/doc:element[@name='other']/doc:element/doc:field[@name='value']">
-                <xsl:value-of select="."/>
-                <xsl:choose>
-                    <xsl:when test="position() > 0 and position() = last()-1"> and </xsl:when>
-                    <xsl:when test="position() &lt; last()-1">; </xsl:when>
-                </xsl:choose>
+                <!--
+                   In theory you would put the test as [position() &lt; $authorsLimitLT] in the select above.
+                   That was broken for cases where there were two authors. The second author was duplicated,
+                   ie. 3 positions instead of 2. That would be an issue with the processor we are using in java,
+                   fine with xsltproc.
+                   If you decide to change it test it well.
+                -->
+                <xsl:if test="position() &lt; $authorsLimitLT">
+                    <xsl:value-of select="."/>
+                    <xsl:choose>
+                        <!-- if `$authorsLimitLT - 1` or less authors use 'and' before the last name -->
+                        <xsl:when test="position() > 0 and position() = last()-1 and $authorsCount &lt; $authorsLimitLT"> and </xsl:when>
+                        <xsl:when test="position() &lt; last() and position() &lt; $authorsLimitLT - 1">; </xsl:when>
+                    </xsl:choose>
+                    <!-- last position and more authors than we display, add 'et al.', eg. 3rd author and the max displayed is 3 -->
+                    <xsl:if test="position() > 0 and position() = $authorsLimitLT - 1 and $authorsCount &gt; $authorsLimitLT - 1"> et al.</xsl:if>
+                </xsl:if>
             </xsl:for-each>
         </xsl:if>
     </xsl:template>
