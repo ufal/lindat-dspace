@@ -74,7 +74,7 @@
                         <xsl:when test="position() &lt; last() and position() &lt; $authorsLimitLT - 1">; </xsl:when>
                     </xsl:choose>
                     <!-- last position and more authors than we display, add 'et al.', eg. 3rd author and the max displayed is 3 -->
-                    <xsl:if test="position() > 0 and position() = $authorsLimitLT - 1 and $authorsCount &gt; $authorsLimitLT - 1"> et al.</xsl:if>
+                    <xsl:if test="position() > 0 and position() = $authorsLimitLT - 1 and $authorsCount &gt; $authorsLimitLT - 1">; et al.</xsl:if>
                 </xsl:if>
             </xsl:for-each>
         </xsl:if>
