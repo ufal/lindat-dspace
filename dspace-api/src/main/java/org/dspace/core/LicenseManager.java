@@ -18,6 +18,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+
+import org.dspace.services.ConfigurationService;
+import org.dspace.utils.DSpace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +35,7 @@ public class LicenseManager
 
     /** The default license */
     private static String license;
+
 
     /**
      * Writes license to a text file.
@@ -141,8 +145,9 @@ public class LicenseManager
      */
     private static void init()
     {
-        File licenseFile = new File(ConfigurationManager.getProperty("dspace.dir")
-                + File.separator + "config" + File.separator + "default.license");
+        String licensePath = new DSpace().getConfigurationService().getPropertyAsType("lr.license.default.path",
+                ConfigurationManager.getProperty("dspace.dir") + File.separator + "config" + File.separator + "default.license");
+        File licenseFile = new File(licensePath);
 
         FileInputStream  fir = null;
         InputStreamReader ir = null;

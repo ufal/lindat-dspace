@@ -376,6 +376,11 @@ lr.link.checker.read.timeout = 3000
 ### Entity ID of your shibboleth sp
 lr.spEntityId = http://example.com/sp/shibboleth
 
+### submission licenses
+lr.default.license = ${dspace.dir}/config/default.license
+lr.alternative.license = ${dspace.dir}/config/alternative.license
+
+
 #####
 #
 #  shortener
