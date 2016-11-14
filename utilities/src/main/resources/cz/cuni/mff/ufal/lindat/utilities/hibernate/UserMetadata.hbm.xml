@@ -7,10 +7,10 @@
             <column name="user_metadata_id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="userRegistration" class="cz.cuni.mff.ufal.lindat.utilities.hibernate.UserRegistration" fetch="join" lazy="false">
+        <many-to-one name="userRegistration" class="cz.cuni.mff.ufal.lindat.utilities.hibernate.UserRegistration" fetch="select">
             <column name="eperson_id" not-null="true" />
         </many-to-one>
-        <many-to-one name="licenseResourceUserAllowance" class="cz.cuni.mff.ufal.lindat.utilities.hibernate.LicenseResourceUserAllowance" fetch="join" lazy="false">
+        <many-to-one name="licenseResourceUserAllowance" class="cz.cuni.mff.ufal.lindat.utilities.hibernate.LicenseResourceUserAllowance" fetch="select">
             <column name="transaction_id" />
         </many-to-one>
         <property name="metadataKey" type="string">
