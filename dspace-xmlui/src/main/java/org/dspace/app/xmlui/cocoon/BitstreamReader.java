@@ -208,11 +208,6 @@ public class BitstreamReader extends AbstractReader implements Recyclable
             // file download - in par, bitstream, name, handle
             //  see dspace-xmlui/dspace-xmlui-webapp/src/main/webapp/sitemap.xmap
             boolean is_item_bitstream = (-1 == bitstreamID && handle != null);
-
-            if(is_item_bitstream && ConfigurationManager.getBooleanProperty("lr", "lr.tracker.enabled")) {
-                // Track the download for analytics platform
-                TrackerFactory.createInstance(TrackingSite.BITSTREAM).trackPage(request,"Bitstream Download / Single File");
-            }
             
             int sequence = par.getParameterAsInteger("sequence", -1);
             String name = par.getParameter("name", null);
@@ -412,6 +407,12 @@ public class BitstreamReader extends AbstractReader implements Recyclable
                     bitstreamName = "bitstream";
                 }
             }
+            
+            if(is_item_bitstream && ConfigurationManager.getBooleanProperty("lr", "lr.tracker.enabled")) {
+                // Track the download for analytics platform
+                TrackerFactory.createInstance(TrackingSite.BITSTREAM).trackPage(request,"Bitstream Download / Single File");
+            }
+            
             
             // Log that the bitstream has been viewed, this is non-cached and the complexity
             // of adding it to the sitemap for every possible bitstream uri is not very tractable
