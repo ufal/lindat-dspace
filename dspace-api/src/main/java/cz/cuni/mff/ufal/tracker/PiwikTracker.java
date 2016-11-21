@@ -3,6 +3,7 @@ package cz.cuni.mff.ufal.tracker;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +54,9 @@ public class PiwikTracker implements Tracker
 
         preTrack(request);
         URL url = tracker.getPageTrackURL(pageName);
+        try {
+        	url = new URL(url.toString() + "&bots=1");
+        } catch(MalformedURLException e){}
         sendTrackingRequest(url);
     }
 
@@ -62,6 +66,9 @@ public class PiwikTracker implements Tracker
 
         preTrack(request);
         URL url = tracker.getDownloadTrackURL(downloadURL);
+        try {
+        	url = new URL(url.toString() + "&bots=1");
+        } catch(MalformedURLException e){}
         sendTrackingRequest(url);
     }
 
