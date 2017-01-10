@@ -432,3 +432,6 @@ migrate_databases:
 
 generate_piwik_reports:
 	LC_ALL=en_US.UTF-8 $(DSPACE_BIN) piwik-report-generator
+
+check_message_translations:
+	./check_message_translations.sh $(DIR_SOURCE) cs
