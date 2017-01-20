@@ -142,7 +142,6 @@ public class JSONDiscoverySearcher extends AbstractReader implements Recyclable 
             }
         }
         out.flush();
-        out.close();
     }
 
     /**

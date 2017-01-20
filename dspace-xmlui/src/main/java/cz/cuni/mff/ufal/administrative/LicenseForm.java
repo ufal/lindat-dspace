@@ -911,7 +911,7 @@ public class LicenseForm extends AbstractDSpaceTransformer {
 		NO_CONFIRMATION("Not required"),
 		ONLY_ONCE("Ask only once"),
 		ALWAYS_ASK("Ask always"),
-		ALLOW_ANNONYMOUS("Allow annonymous");
+		ALLOW_ANONYMOUS("Allow anonymous");
 
 		private final String msg;
 		
