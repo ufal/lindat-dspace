@@ -59,4 +59,7 @@ def create_en_joint_file():
     en_joint_file.write('</catalogue>\n')
     en_joint_file.close()
 
+working_directory = os.path.dirname(os.path.realpath(__file__))
+os.chdir(working_directory)
+
 compare_message_files(language1, language2)
