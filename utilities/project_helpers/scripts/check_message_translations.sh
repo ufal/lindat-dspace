@@ -1,8 +1,10 @@
 #!/bin/bash
 
-source_dir=$1
-language=$2
+language=$1
 
-messages_dir=${source_dir}/dspace-xmlui/src/main/webapp/i18n
-
+script_dir=`dirname ${BASH_SOURCE[0]}`
+cd $script_dir
+xmlui_dir=../../../dspace-xmlui
+messages_dir=$xmlui_dir/src/main/webapp/i18n
+echo $messages_dir
 python dspace-l10n-check.py ${messages_dir}/messages.xml ${messages_dir}/messages_${language}.xml
