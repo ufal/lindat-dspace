@@ -10,6 +10,9 @@ import codecs
 language1 = sys.argv[1]
 language2 = sys.argv[2] if len(sys.argv) > 2 else 'en'
 
+script_directory = os.path.dirname(os.path.realpath(__file__))
+os.chdir(script_directory)
+
 dspace_script = 'dspace-l10n-check.py'
 xmlui_directory = '../../../dspace-xmlui'
 xmlui_localised_directory = xmlui_directory + '/src/main/webapp/i18n'
@@ -58,8 +61,5 @@ def create_en_joint_file():
         en_file.close()
     en_joint_file.write('</catalogue>\n')
     en_joint_file.close()
-
-working_directory = os.path.dirname(os.path.realpath(__file__))
-os.chdir(working_directory)
 
 compare_message_files(language1, language2)
