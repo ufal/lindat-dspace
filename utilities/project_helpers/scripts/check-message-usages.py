@@ -10,7 +10,9 @@ from check_message_lib import find_language_file_name, root_directory
 
 language = sys.argv[1]
 
-grep_command = 'grep -R "[>\'\\"]xmlui\\." --include=*.java --include=*.xsl --include=*.xmap --include=*.xslt'
+prefixes = ['xmlui', 'homepage', 'input_forms', 'org.dspace', 'PiwikStatisticsTransformer', 'UFAL.firstpage']
+grep_command = 'grep -R -P "[>\'\\"](' + '|'.join(prefixes) + ')\\." --include=*.java --include=*.xsl --include=*.xmap --include=*.xslt'
+regexp = "^([^:]+):.*[>'\"]((" + "|".join(prefixes) + ")\.[^<'\"]+)(?:[<'\"]|$)"
 
 os.chdir(root_directory)
 output = subprocess.check_output(grep_command, shell=True)
@@ -18,7 +20,7 @@ output_lines = output.strip().split('\n')
 
 message_prefixes = set()
 for line in output_lines:
-    match = re.search("^([^:]+):.*[>'\"](xmlui\.[^<'\"]+)(?:[<'\"]|$)", line, re.U)
+    match = re.search(regexp, line, re.U)
     if (match):
         message_prefixes.add((match.group(2), match.group(1)))
 
