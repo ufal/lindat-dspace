@@ -28,19 +28,37 @@ for line in output_lines:
 
 message_prefixes = sorted(message_prefixes, key=lambda x: -len(x[0]))
 
+results = {'yes':[], 'no':[], 'partial':[]}
 root = xml.parse(file_name)
 for message in root.findall('message'):
     key = message.get('key')
-    result_type = 'NO'
-    result_file = ''
+    found_file_name = None
     for (prefix, file_name) in message_prefixes:
         if (key == prefix):
-            result_type = 'YES'
-            result_file = file_name
+            results['yes'].append((key, file_name))
+            found_file_name = file_name
             break
         elif (key.startswith(prefix)):
-            result_type = prefix
-            result_file = file_name
+            results['partial'].append((key, prefix, file_name))
+            found_file_name = file_name
             break
-    print '|'.join([key, result_type, result_file])
+    if (found_file_name is None):
+        results['no'].append(key)
     ## hmm, what about messages not starting with "xmlui", like "input-forms", etc ...
+
+print ''
+print 'Message keys with no match (' + str(len(results['no'])) + '):'
+for key in sorted(results['no']):
+    print '  ' + key
+
+print ''
+print 'Message keys with partial match (' + str(len(results['partial'])) + '):'
+for (key, prefix, file_name) in sorted(results['partial'], key=lambda x: x[0]):
+    print '  ' + key + '  (' + prefix + ')  [' + file_name + ']'
+
+print ''
+print 'Message keys with full match (' + str(len(results['yes'])) + '):'
+for (key, file_name) in sorted(results['yes'], key=lambda x: x[0]):
+    print '  ' + key + '  [' + file_name + ']'
+
+ 
