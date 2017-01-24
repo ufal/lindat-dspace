@@ -2,21 +2,17 @@
 
 import sys
 import subprocess
-import codecs
 import os
 import re
 import xml.etree.ElementTree as xml
 
-script_directory = os.path.dirname(os.path.realpath(__file__))
-os.chdir(script_directory)
+from check_message_lib import find_language_file_name, root_directory
 
-file_name = 'dspace-xmlui/src/main/webapp/i18n/messages_cs.xml'
-
-root_directory = '../../..'
-os.chdir(root_directory)
+language = sys.argv[1]
 
 grep_command = 'grep -R "[>\'\\"]xmlui\\." --include=*.java --include=*.xsl --include=*.xmap --include=*.xslt'
 
+os.chdir(root_directory)
 output = subprocess.check_output(grep_command, shell=True)
 output_lines = output.strip().split('\n')
 
@@ -28,9 +24,12 @@ for line in output_lines:
 
 message_prefixes = sorted(message_prefixes, key=lambda x: -len(x[0]))
 
+file_name = find_language_file_name(language)
 results = {'yes':[], 'no':[], 'partial':[]}
 root = xml.parse(file_name)
-for message in root.findall('message'):
+messages = root.findall('*')
+print 'Checking message usage for the ' + str(len(messages)) + ' messages in ' + file_name + ' ...'
+for message in root.findall('*'):
     key = message.get('key')
     found_file_name = None
     for (prefix, file_name) in message_prefixes:
@@ -60,5 +59,3 @@ print ''
 print 'Message keys with full match (' + str(len(results['yes'])) + '):'
 for (key, file_name) in sorted(results['yes'], key=lambda x: x[0]):
     print '  ' + key + '  [' + file_name + ']'
-
- 
