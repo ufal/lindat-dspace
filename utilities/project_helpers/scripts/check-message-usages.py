@@ -12,17 +12,21 @@ language = sys.argv[1]
 
 prefixes = ['xmlui', 'homepage', 'input_forms', 'org.dspace', 'PiwikStatisticsTransformer', 'UFAL.firstpage']
 grep_command = 'grep -R -P "[>\'\\"](' + '|'.join(prefixes) + ')\\." --include=*.java --include=*.xsl --include=*.xmap --include=*.xslt'
-regexp = "^([^:]+):.*[>'\"]((" + "|".join(prefixes) + ")\.[^<'\"]+)(?:[<'\"]|$)"
+line_regexp = r'^(.+?):(.*)$'
+prefix_regexp = "[>'\"]((?:" + "|".join(prefixes) + ")\..+?)[<'\"]"
 
 os.chdir(root_directory)
 output = subprocess.check_output(grep_command, shell=True)
 output_lines = output.strip().split('\n')
 
 message_prefixes = set()
-for line in output_lines:
-    match = re.search(regexp, line, re.U)
-    if (match):
-        message_prefixes.add((match.group(2), match.group(1)))
+for grep_line in output_lines:
+    line_match = re.search(line_regexp, grep_line, re.U)
+    (file_name, line) = line_match.groups()
+    match_tuples = re.findall(prefix_regexp, line, re.U)
+    for match_tuple in match_tuples:
+        prefix = match_tuple
+        message_prefixes.add((prefix, file_name))
 
 message_prefixes = sorted(message_prefixes, key=lambda x: -len(x[0]))
 
