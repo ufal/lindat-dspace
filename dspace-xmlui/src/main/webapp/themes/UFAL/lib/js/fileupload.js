@@ -6,10 +6,9 @@ function createRejectedFilesDialog(files, fileUploadDialog) {
 <div class="modal-content">\
 <div class="modal-header">\
 <button type="button" class="close" data-dismiss="modal">&times;</button>\
-<h4 class="modal-title">' + $.i18n._("Rejected files") + '</h4>\
+<h4 class="modal-title">' + $.i18n._("upload-rejected-files") + '</h4>\
 </div>\
-<div class="modal-body" id="rejected_modal_body"><p>' + $.i18n._("The following files are too large for conventional upload (limit is %s)" +
-			" or are empty (0 bytes). Please contact %s about how to upload these files.",
+<div class="modal-body" id="rejected_modal_body"><p>' + $.i18n._("upload-toolarge-help",
 					convertBytesToHumanReadableForm(lindat_upload_file_alert_max_file_size), "<a href=\"mailto:" + ufal_help_mail +"\">Help Desk</a>") + '</p>\
 </div>\
 <div class="modal-footer">\
@@ -21,9 +20,9 @@ function createRejectedFilesDialog(files, fileUploadDialog) {
 	var modal_body = jModal.find("#rejected_modal_body");
 	for ( var i = 0; i < files.length; i++) {
 		var file = files[i];
-		modal_body.append("<div id='fileName" + i + "'><b>" + $.i18n._("Filename") + ": </b>"
+		modal_body.append("<div id='fileName" + i + "'><b>" + $.i18n._("upload-filename") + ": </b>"
 			+ file.name + "</div>");
-		modal_body.append("<div id='fileSize" + i + "'><b>" + $.i18n._("Size") + ": </b>"
+		modal_body.append("<div id='fileSize" + i + "'><b>" + $.i18n._("upload-size") + ": </b>"
 			+ convertBytesToHumanReadableForm(file.size) + "</span></div>");
 		modal_body.append("<br />");
 	}
@@ -58,12 +57,12 @@ function createFileUploadDialog(files) {
 <div class="modal-content">\
 <div class="modal-header">\
 <button type="button" class="close" data-dismiss="modal">&times;</button>\
-<h4 class="modal-title">' + $.i18n._("File Upload") + '</h4>\
+<h4 class="modal-title">' + $.i18n._("upload-file-upload") + '</h4>\
 </div>\
-<div class="modal-body" id="files_modal_body"><p>' + $.i18n._("Please fill in the description(s) and hit the \"Start Upload\" button.\n Then wait till the file(s) are uploaded.") + '</p>\
+<div class="modal-body" id="files_modal_body"><p>' + $.i18n._('upload-fill-description') + '</p>\
 </div>\
 <div class="modal-footer">\
-<button type="button" class="btn btn-primary" id="js-su-button">' + $.i18n._("Start Upload") +'</button>\
+<button type="button" class="btn btn-primary" id="js-su-button">' + $.i18n._("upload-start-upload") +'</button>\
 <button type="button" class="btn btn-primary hidden" id="js-ok-button">OK</button>\
 </div>\
 </div>\
@@ -76,15 +75,15 @@ function createFileUploadDialog(files) {
 	}
 	for ( var i = 0; i < files.length; i++) {
 		var file = files[i];
-		modal_body.append("<div id='fileName" + i + "'><b>" + $.i18n._("Filename") + ": </b>"
+		modal_body.append("<div id='fileName" + i + "'><b>" + $.i18n._("upload-filename") + ": </b>"
 			+ file.name + "</div>");
-		modal_body.append("<div id='fileType" + i + "'><b>" + $.i18n._("Type") + ": </b>"
+		modal_body.append("<div id='fileType" + i + "'><b>" + $.i18n._("upload-type") + ": </b>"
 			+ file.type + "</div>");
 		modal_body.append("<div id='fileDescDiv" + i
-			+ "'><b>" + $.i18n._("Describe the file") + ": </b><input id='fileDesc" + i
+			+ "'><b>" + $.i18n._("upload-describe-file") + ": </b><input id='fileDesc" + i
 			+ "' type=\"text\"/></div>");
 		modal_body.append("<div id='fileSizeProgress" + i
-			+ "'><b>" + $.i18n._("Progress") + ": </b><span id='fileSize" + i + "'>0 bytes / "
+			+ "'><b>" + $.i18n._("upload-progress") + ": </b><span id='fileSize" + i + "'>0 bytes / "
 			+ convertBytesToHumanReadableForm(file.size) + "</span></div>");
 		modal_body.append("<div id='fileProgress" + i
 			+ "'><progress id='progressBar" + i
@@ -136,14 +135,14 @@ function createFileUploadDialog(files) {
 						return function(jqXHR, textStatus, errorThrown) {
 							// scream on errors but not on abort
 							if (textStatus !== 'abort') {
-								alert($.i18n._("Upload of %s failed.\n%s\n%s",f.name, textStatus, errorThrown));
+								alert($.i18n._('upload-upload-failed',f.name, textStatus, errorThrown));
 							}
 						}}(file),
 					success : function(fs, pb) {
 						return function() {
 							// fix for FF
 							pb.attr("value","100");
-							fs.html($.i18n._("Done."));
+							fs.html($.i18n._("upload-done"));
 						}}(fileSize,progBar),
 					url : action,
 					data : fd,
@@ -229,23 +228,6 @@ function processFiles(files) {
 jQuery(document)
 	.ready(
 	function() {
-
-		jQuery.i18n.load("cs", {
-			"Rejected files": "Odmítnuté soubory",
-			"The following files are too large for conventional upload (limit is %s) or are empty (0 bytes). Please contact %s about how to upload these files.":
-				"Následující soubory jsou příliš velké (limit je %s) pro nahrání běžnou cestou a nebo jsou prázdné (0 bytů). Tyto soubory vám pomůže nahrát %s, prosím kontaktujte jej.",
-			"Filename": "Jméno souboru",
-			"Size": "Velikost",
-			"File Upload": "Odeslání souboru",
-			"Please fill in the description(s) and hit the \"Start Upload\" button.\n Then wait till the file(s) are uploaded.":
-				"Vyplňte prosím popisky souborů a zmáčkněte tlačítko \"Začít odesílat\".\nPotom vyčkejte, dokud se soubor(y) nenahrají.",
-			"Start Upload": "Začít odesílat",
-			"Describe the file": "Popište soubor",
-			"Progress": "Průběh",
-			"Upload of %s failed.\n%s\n%s": "Nahrání souboru %s selhalo.\n%s\n%s",
-			"Type": "Typ",
-			"Done": "Hotovo",
-		});
 
 		var fileFieldO = jQuery("#aspect_submission_StepTransformer_field_file");
 
