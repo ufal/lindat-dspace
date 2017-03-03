@@ -33,7 +33,7 @@ function drop(e) {
 	ignoreDrag(e);
 	var files = e.originalEvent.dataTransfer.files;
 	if (files === null || files === undefined || files.length === 0) {
-		alert($.i18n._("dragndro-upload-failed"));
+		alert($.i18n._("dragndrop-upload-failed"));
 		return false;
 	}
 	processFiles(files);
