@@ -28,7 +28,7 @@ jQuery(document).ready(function() {
 			var heading = jQuery(".error-heading", div);
 			var details = jQuery(".error-details", div);
 			heading.html('<i class="fa fa-warning fa-lg ">&#160;</i>' + jQuery.i18n._('login-error'));
-			details.html('<div class="text-center" style="font-size: 130%;">' + jQuery.i18n._('login-missing-info', idpEntityId) + '<br><a class="btn btn-sm btn-danger" style="margin: 10px;" href="' + jQuery('.helpdesk').attr('href') + '">' + jQuery.i18n._('login-contact-helpdesk') + '</a></div>');
+			details.html('<div class="text-center" style="font-size: 130%;">' + jQuery.i18n._('login-missing-info-send-us', idpEntityId) + '<br><a class="btn btn-sm btn-danger" style="margin: 10px;" href="' + jQuery('.helpdesk').attr('href') + '">' + jQuery.i18n._('login-contact-helpdesk') + '</a></div>');
 		});
 	};
 	
@@ -80,9 +80,9 @@ jQuery(document).ready(function() {
 							var href =  "mailto:" + contact + "?" + "cc=" + cc +
 							"&subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(messageBody.replace("\n", "\n\r"));	
 							
-							heading.html('<i class="fa fa-warning fa-lg ">&#160;</i>' + jQuery.i18n._('login-authentication-failed'));
+							heading.html('<i class="fa fa-warning fa-lg ">&#160;</i>' + jQuery.i18n._('login-cannot-continue'));
 							details.append('<div class="text-center" style="font-size: 130%;">' + 
-							jQuery.i18n._('login-missing-info', idp_display_name) +
+							jQuery.i18n._('login-missing-info-send-you', idp_display_name) +
 							'</div>');
 							
 							var mailContainer = jQuery('<dl />');
