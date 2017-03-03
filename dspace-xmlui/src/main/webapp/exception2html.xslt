@@ -256,8 +256,24 @@
 	        </xsl:variable>
 	        <script type="text/javascript" src="{concat($protocol, 'ajax.googleapis.com/ajax/libs/jquery/', $jqueryVersion ,'/jquery.min.js')}">&#160;</script>
 	        <script type="text/javascript" src="{$contextPath}/themes/UFAL/lib/js/jquery-ui.js">&#160;</script>
-			<script type="text/javascript" src="{$contextPath}/themes/UFAL/lib/js/jquery.i18n.js">&#160;</script>
-			<script type="text/javascript" src="{$contextPath}/themes/UFAL/lib/js/messages.js">&#160;</script>
+                <script type="text/javascript" src="{$contextPath}/themes/UFAL/lib/js/jquery.i18n.js">&#160;</script>
+		<script type="text/javascript">
+		    <xsl:variable name="currentLocale">
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='page'][@qualifier='currentLocale']"/>
+                    </xsl:variable>
+                    <xsl:attribute name="src">
+                        <xsl:variable name="localizedContextPath" select="concat($theme-path,'/lib/js/messages/messages_',$currentLocale,'.js')" />
+                        <xsl:variable name="localizedDiskPath" select="concat($theme-path-on-disk,'/lib/js/messages/messages_',$currentLocale,'.js')" />
+                        <xsl:variable name="path" select="file:new($localizedDiskPath)"/>
+                        <xsl:choose>
+                            <xsl:when test="file:isFile($path)">
+                                <xsl:value-of select="$localizedContextPath" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="concat($theme-path,'/lib/js/messages/messages.js')" />
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>&#160;</script>
 
             <script type="text/javascript" src="{concat($aaiURL, '/discojuice/discojuice-2.1.en.min.js')}">&#160;</script>
             <script type="text/javascript" src="{concat($aaiURL, '/aai.js')}">&#160;</script>
