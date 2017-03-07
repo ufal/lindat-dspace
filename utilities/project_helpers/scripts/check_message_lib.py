@@ -30,7 +30,7 @@ def _create_xml_en_joint_file():
     en_file_names = set()
     for (dpath, dnames, fnames) in os.walk(root_directory):
         for fname in [os.path.join(dpath, fname) for fname in fnames]:
-            if (fname.endswith('/messages.xml')):
+            if ('/target/' not in fname and fname.endswith('/messages.xml')):
                 en_file_names.add(fname)
     print 'Constructing temporary /tmp/messages_en.xml from all messages.xml:\n  ' + '\n  '.join(en_file_names) + '\n'
     en_joint_file = codecs.open(xml_en_joint_file_name, 'w', 'UTF-8')
