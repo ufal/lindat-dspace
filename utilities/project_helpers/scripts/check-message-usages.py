@@ -80,38 +80,24 @@ def add_js_results(language, results):
                     raise
             results.append(result)
 
+def print_partial_results(results_all, kind, match):
+    results = [result for result in results_all if result['type'] == kind and result['match'] == match]
+    print ''
+    print kind + ' message keys with ' + match + ' match (' + str(len(results)) + '):'
+    for result in results:
+        line = '  ' + result['key']
+        if (result['prefix'] is not None):
+            line += ' (' + result['prefix'] + ')'
+        if (result['file_name'] is not None):
+            line += ' [' + result['file_name'] + ']'
+        print line
+
 results = []
 add_xml_results(language, results)
 add_js_results(language, results)
 
-results_xml_no = [result for result in results if result['type'] == 'xml' and result['match'] == 'no']
-results_xml_partial = [result for result in results if result['type'] == 'xml' and result['match'] == 'partial']
-results_xml_full = [result for result in results if result['type'] == 'xml' and result['match'] == 'full']
-
-results_js_no = [result for result in results if result['type'] == 'js' and result['match'] == 'no']
-results_js_full = [result for result in results if result['type'] == 'js' and result['match'] == 'full']
-
-print ''
-print 'XML message keys with no match (' + str(len(results_xml_no)) + '):'
-for result in sorted(results_xml_no, key=lambda x: x['key']):
-    print '  ' + result['key']
-    
-print ''
-print 'XML message keys with partial match (' + str(len(results_xml_partial)) + '):'
-for result in sorted(results_xml_partial, key=lambda x: x['key']):
-    print '  ' + result['key'] + '  (' + result['prefix'] + ')  [' + result['file_name'] + ']'
-
-print ''
-print 'XML message keys with full match (' + str(len(results_xml_full)) + '):'
-for result in sorted(results_xml_full, key=lambda x: x['key']):
-    print '  ' + result['key'] + '  [' + result['file_name'] + ']'
-
-print ''
-print 'JS message keys with no match (' + str(len(results_js_no)) + '):'
-for result in sorted(results_js_no, key=lambda x: x['key']):
-    print '  ' + result['key']
-    
-print ''
-print 'JS message keys with match (' + str(len(results_js_full)) + '):'
-for result in sorted(results_js_full, key=lambda x: x['key']):
-    print '  ' + result['key'] + '  [' + result['file_name'] + ']'
+print_partial_results(results, 'xml', 'no')
+print_partial_results(results, 'xml', 'partial')
+print_partial_results(results, 'xml', 'full')
+print_partial_results(results, 'js', 'no')
+print_partial_results(results, 'js', 'full')
