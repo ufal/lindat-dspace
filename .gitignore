@@ -38,3 +38,6 @@ META-INF/
 
 .*.sw[pon]
 /bin/
+
+## Ignore compiled python files
+*.pyc
