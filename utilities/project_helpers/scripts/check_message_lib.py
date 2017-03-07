@@ -22,7 +22,7 @@ def find_language_file_name(language, kind):
             file_name = js_i18n_directory + '/messages_' + language + '.js'
         else:
             file_name = js_i18n_directory + '/messages.js'
-    return file_name
+    return os.path.abspath(file_name)
 
 ## Merge together all messages.xml into one temporary messages-en.xml.
 ## Avoids xml parsing to prevent namespace complications.
@@ -31,7 +31,7 @@ def _create_xml_en_joint_file():
     for (dpath, dnames, fnames) in os.walk(root_directory):
         for fname in [os.path.join(dpath, fname) for fname in fnames]:
             if ('/target/' not in fname and fname.endswith('/messages.xml')):
-                en_file_names.add(fname)
+                en_file_names.add(os.path.abspath(fname))
     print 'Constructing temporary /tmp/messages_en.xml from all messages.xml:\n  ' + '\n  '.join(en_file_names) + '\n'
     en_joint_file = codecs.open(xml_en_joint_file_name, 'w', 'UTF-8')
     for (index, en_file_name) in enumerate(en_file_names):
