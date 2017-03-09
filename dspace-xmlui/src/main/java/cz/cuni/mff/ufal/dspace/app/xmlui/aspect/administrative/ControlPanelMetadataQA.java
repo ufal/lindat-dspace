@@ -54,10 +54,8 @@ public class ControlPanelMetadataQA extends AbstractControlPanelTab {
 		String updated_field = null;
         Request request = ObjectModelHelper.getRequest(objectModel);
         Pattern updateParamPattern = Pattern.compile("^update_(.*)_(\\d+)$");
-        for ( Object obj : request.getParameters().entrySet() )
+        for ( String key : (Set<String>)request.getParameters().keySet() )
         {
-            Map.Entry me = (Map.Entry)obj;
-            String key = (String)me.getKey();
             Matcher updateParamMatcher = updateParamPattern.matcher(key);
             if(updateParamMatcher.find() && request.getParameter(key) != null)
             {
@@ -280,12 +278,12 @@ throws WingException
         int id = 1;
         for (Map.Entry<String, Integer> i : hm.entrySet())
         {
-            form.addLabel(i.getKey());
+            form.addLabel("value = " + i.getKey());
             org.dspace.app.xmlui.wing.element.Item row = form.addItem();
-            row.addContent(String.format("%d / %d", i.getValue(), count));
+            row.addContent(String.format("%d (value seen) / %d (items having the md field)", i.getValue(), count));
             row.addHidden(String.format("original_%s_%d", meta_field,id)).setValue(i.getKey());
             row.addText(String.format("new_%s_%d", meta_field,id)).setValue(i.getKey());
-            row.addButton(String.format("update_%s_%d", meta_field,id), "btn btn-repository").setValue("Update");
+            row.addButton(String.format("update_%s_%d", meta_field,id), "btn btn-repository").setValue("Update all occurrences");
             id++;
         }
 	}

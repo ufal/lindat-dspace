@@ -68,6 +68,9 @@ public class PageNotFoundTransformer extends AbstractDSpaceTransformer implement
     
     private static final Message T_dspace_home =
         message("xmlui.general.dspace_home");
+
+    private static final Message T_help_desk =
+            message("xmlui.general.helpdesk");
     
     
     /** Where the body element is stored while we wait to see if it is empty */
@@ -203,9 +206,9 @@ public class PageNotFoundTransformer extends AbstractDSpaceTransformer implement
             Throwable t = new Throwable("Page cannot be found");
             List list = notFound.addList("not-found", List.TYPE_FORM);
             Item mess = list.addItem();
-            mess.addHighlight("").addContent("Sorry, we couldn't find the page you've requested ("+path+"), if you think it should exist please contact our ");
+            mess.addHighlight("").addContent(T_para1.parameterize(path));
             String support = ConfigurationManager.getProperty("lr.help.mail");
-            mess.addHighlight("").addXref("mailto:" + support, "Help Desk.", null, null);
+            mess.addHighlight("").addXref("mailto:" + support, T_help_desk, null, null);
             list.addItem(null, "fa fa-warning fa-5x hangright").addContent(" ");
 
             notFound.addPara().addXref(contextPath + "/",T_go_home);

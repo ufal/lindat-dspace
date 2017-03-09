@@ -42,6 +42,7 @@
 	<message key="xmlui.general.perform">Vykonat</message>
 	<message key="xmlui.general.queue">Fronta</message>
 	<message key="xmlui.general.here">zde</message>
+	<message key="xmlui.general.helpdesk">poradnu</message>
 
         <!-- Keys which are used by exception2dri.xsl on error pages -->
         <message key="xmlui.error.contact_msg">Pokud chcete nahlásit tuto chybu, prosím kontaktujte správce. Pokud je to možné, uveďte prosím podrobnosti o tom, co jste dělali v době, kdy k této chybě došlo.</message>
@@ -57,7 +58,7 @@
 		-->
 	<message key="xmlui.PageNotFound.title">Stránka nenalezena</message>
 	<message key="xmlui.PageNotFound.head">Stránka nenalezena</message>
-	<message key="xmlui.PageNotFound.para1">Stránka, kterou jste požadovali, nebyla nalezena.</message>
+	<message key="xmlui.PageNotFound.para1">Stránka, kterou jste požadovali ({0}), nebyla nalezena. Pokud si myslíte, že by měla existovat, prosím kontaktujte naši </message>
 
 	<!--  session expired  -->
 	<message key="xmlui.SessionExpired.title">Vaše relace vypršela</message>

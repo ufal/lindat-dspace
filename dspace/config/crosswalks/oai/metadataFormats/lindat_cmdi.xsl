@@ -132,9 +132,11 @@
 		<cmd:Components>
 			<cmd:data>
 				<xsl:call-template name="OLAC_DCMI"/>
-				<xsl:call-template name="ResourceInfo">
-					<xsl:with-param name="ns" select='"http://www.clarin.eu/cmd/"'/>
-				</xsl:call-template>
+				<xsl:if test="doc:metadata/doc:element[@name='metashare']/doc:element[@name='ResourceInfo#IdentificationInfo']/doc:element[@name='resourceName']/doc:element/doc:field[@name='value']">
+                    <xsl:call-template name="ResourceInfo">
+                        <xsl:with-param name="ns" select='"http://www.clarin.eu/cmd/"'/>
+                    </xsl:call-template>
+				</xsl:if>
 			</cmd:data>
 		</cmd:Components>
 	</xsl:template>
@@ -174,11 +176,13 @@
 			<cmd:identifiers>
 				<cmd:identifier type="Handle"><xsl:value-of select="$dc_identifier_uri"/></cmd:identifier>
 			</cmd:identifiers>
-			<cmd:funds>
-				<xsl:for-each select="doc:metadata/doc:element[@name='local']/doc:element[@name='sponsor']/doc:element/doc:field[@name='value']">
-					<xsl:copy-of select="itemUtil:getFunding(.)"/>
-				</xsl:for-each>
-			</cmd:funds>
+			<xsl:if test="doc:metadata/doc:element[@name='local']/doc:element[@name='sponsor']/doc:element/doc:field[@name='value']">
+                <cmd:funds>
+                    <xsl:for-each select="doc:metadata/doc:element[@name='local']/doc:element[@name='sponsor']/doc:element/doc:field[@name='value']">
+                        <xsl:copy-of select="itemUtil:getFunding(.)"/>
+                    </xsl:for-each>
+                </cmd:funds>
+            </xsl:if>
 			<xsl:copy-of select="itemUtil:getContact(doc:metadata/doc:element[@name='local']/doc:element[@name='contact']/doc:element[@name='person']/doc:element/doc:field[@name='value'])"/>
 			<cmd:publishers>
 				<cmd:publisher>

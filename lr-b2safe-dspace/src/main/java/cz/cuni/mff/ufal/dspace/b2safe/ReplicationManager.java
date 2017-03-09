@@ -506,6 +506,7 @@ class ReplicationThread implements Runnable {
 
 	public void run() {
 		Context context = null;
+		File file = null;
 		try {
 
 			context = new Context();
@@ -530,8 +531,7 @@ class ReplicationThread implements Runnable {
 			}
 
 			// prepare AIP
-			File file = getTemporaryFile(ReplicationManager.handleToFileName(handle));
-			file.deleteOnExit();
+			file = getTemporaryFile(ReplicationManager.handleToFileName(handle));
 
 			new DSpaceAIPDisseminator().disseminate(context, item, new PackageParameters(), file);
 
@@ -559,6 +559,10 @@ class ReplicationThread implements Runnable {
 			ReplicationManager.log.error(String.format("Could not replicate [%s] [%s]", this.handle, e.toString()), e);
 			ReplicationManager.inProgress.remove(handle);
 			ReplicationManager.failed.put(handle, e);			
+		}finally {
+			if(file != null && !file.delete()){
+				ReplicationManager.log.error(String.format("Failed to delete file [%s] when replicating [%s].", file.getAbsoluteFile(), this.handle));
+			}
 		}
 
 		try {

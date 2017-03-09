@@ -38,6 +38,7 @@
         <message key="xmlui.general.perform">Perform</message>
         <message key="xmlui.general.queue">Queue</message>
 	<message key="xmlui.general.here">here</message>
+    <message key="xmlui.general.helpdesk">Help Desk</message>
 
         <!-- Keys which are used by exception2dri.xsl on error pages -->
         <message key="xmlui.error.contact_msg">Please contact the site administrator if you wish to report this error. If possible, please  provide details about what you were doing at the time this error occurred.</message>
@@ -53,7 +54,7 @@
 		-->
 	<message key="xmlui.PageNotFound.title">Page not found</message>
 	<message key="xmlui.PageNotFound.head">Page not found</message>
-	<message key="xmlui.PageNotFound.para1">We can't find the page you asked for.</message>
+	<message key="xmlui.PageNotFound.para1">Sorry, we couldn't find the page you've requested ({0}), if you think it should exist please contact our </message>
 
     <!--  session expired  -->
     <message key="xmlui.SessionExpired.title">Your Session has Expired</message>

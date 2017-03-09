@@ -221,17 +221,4 @@ jQuery(document).ready(function () {
     jQuery(".unpublished_items").attr("id", "aspect_submission_Submissions_div_submissions");
     jQuery(".itemlist").css("margin-bottom", "30px");
 
-    jQuery(".toggle-onclick-parent-next4").each(function () {
-        // toggle on click
-        var how_many = 4;
-        jQuery(this).click(function () {
-            var o = jQuery(this).parent();
-            for (var i = 0; i < how_many; ++i) {
-                o = o.next();
-                o.toggleClass('hidden');
-            }
-            return false;
-        });
-    });
-
 }); // ready
