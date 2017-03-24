@@ -26,7 +26,7 @@
 	xmlns:encoder="xalan://java.net.URLEncoder"
 	xmlns:solrClientUtils="org.apache.solr.client.solrj.util.ClientUtils"
 	xmlns="http://www.w3.org/1999/xhtml"
-	exclude-result-prefixes="i18n encoder solrClientUtils dri mets xlink xsl dim xhtml mods confman util">
+	exclude-result-prefixes="i18n encoder solrClientUtils dri mets xlink xsl dim xhtml mods confman util file">
 
 	<xsl:output indent="yes" />
 
