@@ -18,6 +18,7 @@
     xmlns:dim="http://www.dspace.org/xmlns/dspace/dim"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:file="java.io.File"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:confman="org.dspace.core.ConfigurationManager"
     xmlns="http://www.w3.org/1999/xhtml"
