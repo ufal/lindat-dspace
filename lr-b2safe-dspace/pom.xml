@@ -45,6 +45,7 @@
 			<groupId>B2SAFE-repository-package</groupId>
 			<artifactId>b2safe_rp_pilot</artifactId>
 			<version>1.0.5</version>
+			<classifier>jar-with-dependencies</classifier>
 		</dependency>
          <dependency>
             <groupId>org.dspace</groupId>
