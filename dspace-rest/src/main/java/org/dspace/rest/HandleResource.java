@@ -13,7 +13,6 @@ import cz.cuni.mff.ufal.dspace.rest.FeaturedServices;
 import cz.cuni.mff.ufal.dspace.rest.RefBoxData;
 import cz.cuni.mff.ufal.dspace.rest.citation.formats.AbstractFormat;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeManager;
 import org.dspace.content.Metadatum;
@@ -31,21 +30,16 @@ import se.kb.oai.pmh.ErrorResponseException;
 import se.kb.oai.pmh.OaiPmhServer;
 import se.kb.oai.pmh.Record;
 
-import javax.security.auth.login.Configuration;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created with IntelliJ IDEA.
@@ -68,7 +62,7 @@ public class HandleResource extends Resource {
         DSpaceObject result = null;
 
         try {
-            context = createContext(getUser(headers));
+            context = createContext(headers);
 
             org.dspace.content.DSpaceObject dso = HandleManager.resolveToObject(context, prefix + "/" + suffix);
             if(dso == null) {
@@ -115,7 +109,7 @@ public class HandleResource extends Resource {
                                                 @Context HttpHeaders headers) throws WebApplicationException {
         org.dspace.core.Context context = null;
         try {
-            context = createContext(getUser(headers));
+            context = createContext(headers);
             org.dspace.content.DSpaceObject dso = HandleManager.resolveToObject(context, prefix + "/" + suffix);
             if (dso == null || dso.getType() != Constants.ITEM) {
                 context.complete();
@@ -166,7 +160,7 @@ public class HandleResource extends Resource {
                                          @Context HttpHeaders headers) throws WebApplicationException {
         org.dspace.core.Context context = null;
         try {
-            context = createContext(getUser(headers));
+            context = createContext(headers);
             org.dspace.content.DSpaceObject dso = HandleManager.resolveToObject(context, prefix + "/" + suffix);
             if (dso == null || dso.getType() != Constants.ITEM) {
                 context.complete();
@@ -190,7 +184,7 @@ public class HandleResource extends Resource {
                                @Context HttpHeaders headers) throws WebApplicationException {
         org.dspace.core.Context context = null;
         try {
-            context = createContext(getUser(headers));
+            context = createContext(headers);
             org.dspace.content.DSpaceObject dso = HandleManager.resolveToObject(context, prefix + "/" + suffix);
             if (dso == null || dso.getType() != Constants.ITEM) {
                 context.complete();

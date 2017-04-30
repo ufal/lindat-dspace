@@ -107,16 +107,17 @@ public class Core {
         StringBuilder ret = new StringBuilder();
         Map<String, Map<String, Integer>> table = new HashMap<>();
         Set<String> colnames = new HashSet<>();
-        int lenColname = 0;
+        int lenColname = 1;
         Context context = new Context();
         TableRowIterator rows = DatabaseManager.query(context,
-                "SELECT text_value AS type, colname, count(text_value) AS count FROM item JOIN metadatavalue ON item_id=resource_id " +
-                "NATURAL JOIN metadatafieldregistry NATURAL JOIN metadataschemaregistry JOIN " +
-                "(SELECT resource_id, text_value AS colname FROM metadatavalue NATURAL JOIN metadatafieldregistry NATURAL JOIN metadataschemaregistry "+
+                "SELECT text_value AS type, colname, count(*) AS count FROM metadatavalue " +
+                "NATURAL JOIN metadatafieldregistry NATURAL JOIN metadataschemaregistry " +
+                "RIGHT JOIN item ON item_id=resource_id AND resource_type_id=? AND short_id='dc' AND element='type' AND withdrawn=false AND in_archive=true " +
+                "JOIN (SELECT resource_id, text_value AS colname FROM metadatavalue NATURAL JOIN metadatafieldregistry NATURAL JOIN metadataschemaregistry "+
                     "WHERE short_id='dc' AND element='title' AND qualifier IS NULL AND resource_type_id=?) " +
                         "AS colnames ON colnames.resource_id=owning_collection " +
-                "WHERE resource_type_id=? AND short_id='dc' AND element='type' AND withdrawn=false AND in_archive=true GROUP BY text_value, colname;",
-                Constants.COLLECTION, Constants.ITEM);
+                "GROUP BY text_value, colname;",
+                Constants.ITEM, Constants.COLLECTION);
         for(TableRow row : rows.toList()){
             String type = row.getStringColumn("type");
             String colname = row.getStringColumn("colname");

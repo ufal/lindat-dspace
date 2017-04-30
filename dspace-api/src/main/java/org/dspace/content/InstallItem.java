@@ -10,6 +10,8 @@ package org.dspace.content;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import cz.cuni.mff.ufal.DSpaceApi;
+import cz.cuni.mff.ufal.curation.ProcessBitstreams;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.ConfigurationManager;
@@ -238,6 +240,21 @@ public class InstallItem
                     handle_of_replaced, item.getHandle()));
             }
         }
+
+        Context context = new Context(Context.READ_ONLY);
+        context.setCurrentUser(null);
+        for(Bundle bundle : item.getBundles("ORIGINAL")){
+            for (Bitstream b : bundle.getBitstreams()){
+                try {
+                    DSpaceApi.authorizeBitstream(context, b);
+                }catch (AuthorizeException e){
+                    //Anonymous user not allowed by license - don't generate preview
+                    b.clearMetadata(ProcessBitstreams.schema, ProcessBitstreams.element, ProcessBitstreams.qualifier, Item.ANY);
+                    b.update();
+                }
+            }
+        }
+        context.complete();
 
 		// provenance
         StringBuilder provDescription = new StringBuilder();

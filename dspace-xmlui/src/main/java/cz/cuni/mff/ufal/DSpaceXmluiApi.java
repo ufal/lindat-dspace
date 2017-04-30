@@ -41,7 +41,8 @@ public class DSpaceXmluiApi {
 	 */
 	public static void app_xmlui_aspect_eperson_postError(Division div)
 			throws org.dspace.app.xmlui.wing.WingException {
-		String err = DSpaceApi.getFunctionalityManager().getErrorMessage(); 
+		String err = DSpaceApi.getFunctionalityManager().getErrorMessage();
+		Object[] params = DSpaceApi.getFunctionalityManager().getErrorMessageParams();
 		if ( err == null ) {
 			err = "undefined";
 		}
@@ -50,7 +51,7 @@ public class DSpaceXmluiApi {
 			return;
 		}
 		if ( err.startsWith("xmlui.") ) {
-			div.addPara("errors", "alert alert-danger").addContent(AbstractWingTransformer.message(err));
+			div.addPara("errors", "alert alert-danger").addContent(AbstractWingTransformer.message(err).parameterize(params));
 		}else {
 			div.addPara("errors", "alert alert-danger").addContent(err);
 		}

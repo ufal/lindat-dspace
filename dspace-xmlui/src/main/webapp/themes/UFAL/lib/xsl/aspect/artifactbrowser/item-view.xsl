@@ -299,9 +299,42 @@
 				</xsl:call-template>
 			</xsl:when>
 
+			<!-- referenced by -->
+			<xsl:when
+					test="$clause = 6 and dim:field[@element='relation'][@qualifier='isreferencedby']">
+				<dl id="relation-isreferencedby" class="dl-horizontal">
+					<dt style="text-align: left">
+						<i class="fa fa-link">&#160;</i>
+						<i18n:text>xmlui.dri2xhtml.METS-1.0.item-relation-isreferencedby</i18n:text>
+					</dt>
+					<dd>
+						<xsl:for-each
+								select="dim:field[@element='relation' and @qualifier='isreferencedby']">
+							<xsl:if test="self::node()[text()!='']">
+								<a target="_blank">
+									<xsl:attribute name="href">
+										<xsl:copy-of select="./node()" />
+									</xsl:attribute>
+									<xsl:copy-of select="./node()" />
+								</a>
+								<xsl:if
+										test="count(following-sibling::dim:field[@element='relation' and @qualifier='isreferencedby']) != 0">
+									<br />
+								</xsl:if>
+							</xsl:if>
+						</xsl:for-each>
+					</dd>
+				</dl>
+
+				<xsl:call-template name="itemSummaryView-DIM-fields">
+					<xsl:with-param name="clause" select="($clause + 1)" />
+					<xsl:with-param name="phase" select="$otherPhase" />
+				</xsl:call-template>
+			</xsl:when>
+
 			<!-- date.issued row -->
 			<xsl:when
-				test="$clause = 6 and (dim:field[@element='date' and @qualifier='issued'])">
+				test="$clause = 7 and (dim:field[@element='date' and @qualifier='issued'])">
 				<dl id="date-issued" class="dl-horizontal">
 					<dt style="text-align: left">
 						<i class="fa fa-calendar">&#160;</i>					
@@ -325,7 +358,7 @@
 
 			<!-- type row -->
 			<xsl:when
-				test="$clause = 7 and (dim:field[@element='type' and not(@qualifier)])">
+				test="$clause = 8 and (dim:field[@element='type' and not(@qualifier)])">
 					<dl id="item-type" class="dl-horizontal">
 					<dt style="text-align: left">
 						<i class="fa fa-tag">&#160;</i>
@@ -345,7 +378,7 @@
 			</xsl:when>				
 
 			<!-- size row -->
-			<xsl:when test="$clause = 8">
+			<xsl:when test="$clause = 9">
 					<xsl:variable name="sizeInfo">
 						<xsl:choose>
 							<xsl:when test="dim:field[@mdschema='local' and @element='size' and @qualifier='info'][1]/node()">
@@ -388,7 +421,7 @@
 
 			<!-- type languages -->
 			<xsl:when
-				test="$clause = 9 and (dim:field[@element='language' and @qualifier='iso'])">
+				test="$clause = 10 and (dim:field[@element='language' and @qualifier='iso'])">
 					<dl id="item-languages" class="dl-horizontal">
 					<dt style="text-align: left">
 						<i class="fa fa-flag ">&#160;</i>
@@ -467,7 +500,7 @@
 
 			<!-- Description row -->
 			<xsl:when
-				test="$clause = 10 and (dim:field[@element='description' and not(@qualifier)])">
+				test="$clause = 11 and (dim:field[@element='description' and not(@qualifier)])">
 				<dl id="item-description" class="dl-horizontal linkify">
 					<dt style="text-align: left">
 						<i class="fa fa-file-text-o">&#160;</i>
@@ -500,7 +533,7 @@
 			
 			<!-- Publisher row -->
 			<xsl:when
-				test="$clause = 11 and (dim:field[@element='publisher' and not(@qualifier)])">
+				test="$clause = 12 and (dim:field[@element='publisher' and not(@qualifier)])">
 				<dl id="item-publisher" class="dl-horizontal">
 					<dt style="text-align: left">
 						<i class="fa fa-copy">&#160;</i>
@@ -532,7 +565,7 @@
 
 			<!-- Sponsors row -->
 			<xsl:when
-				test="$clause = 12 and ((dim:field[@element='sponsor' and not(@qualifier)]) or (dim:field[@element='ResourceInfo#ResourceCreationInfo#FundingInfo#ProjectInfo'] and dim:field[@qualifier='projectName']))">
+				test="$clause = 13 and ((dim:field[@element='sponsor' and not(@qualifier)]) or (dim:field[@element='ResourceInfo#ResourceCreationInfo#FundingInfo#ProjectInfo'] and dim:field[@qualifier='projectName']))">
 				<dl id="item-sponsor" class="dl-horizontal">
 					<dt style="text-align: left">
 						<i class="fa fa-money">&#160;</i>
@@ -603,7 +636,7 @@
 			
 			<!-- Subject keywords -->
 			<xsl:when
-				test="$clause = 13 and (dim:field[@element='subject' and not(@qualifier)])">
+				test="$clause = 14 and (dim:field[@element='subject' and not(@qualifier)])">
 				<dl id="item-subject" class="dl-horizontal">
 					<dt style="text-align: left">
 						<i class="fa fa-tags">&#160;</i>
@@ -629,7 +662,7 @@
 			
 			<!-- Collections -->
   			<xsl:when
-				test="$clause = 14 and $ufal-collection-references">
+				test="$clause = 15 and $ufal-collection-references">
 				<dl id="item-subject" class="dl-horizontal">
 					<dt style="text-align: left">
 						<i class="fa fa-sitemap">&#160;</i>
@@ -654,7 +687,7 @@
 				</xsl:call-template>
 			</xsl:when>
 
-			<xsl:when test="$clause = 15 and $ds_item_view_toggle_url != ''">
+			<xsl:when test="$clause = 16 and $ds_item_view_toggle_url != ''">
 
                 <!-- replacedby info -->
                 <xsl:if test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1">
@@ -701,7 +734,7 @@
 			<!-- recurse without changing phase if we didn't output anything -->
 			<xsl:otherwise>
 				<!-- IMPORTANT: This test should be updated if clauses are added! -->
-				<xsl:if test="$clause &lt; 15">
+				<xsl:if test="$clause &lt; 16">
 					<xsl:call-template name="itemSummaryView-DIM-fields">
 						<xsl:with-param name="clause" select="($clause + 1)" />
 						<xsl:with-param name="phase" select="$phase" />
@@ -916,78 +949,81 @@
                         <i18n:param><xsl:copy-of select="$formatted-file-size"/></i18n:param>
                     </i18n:translate>
 				</a>
-				<xsl:if test="mets:Local/mets:file">
-					<a class="filebutton label label-info" role="button" data-toggle="collapse">
-						<xsl:attribute name="href">
-							<xsl:text>#file_</xsl:text><xsl:value-of select="@ID" />
-						</xsl:attribute>					
-                    	<i class="fa fa-eye">&#160;</i>
-						<i18n:text>xmlui.UFAL.artifactbrowser.item_view.preview</i18n:text>
-					</a>
-					<div class="collapse">
-						<xsl:attribute name="id">
-							<xsl:text>file_</xsl:text><xsl:value-of select="@ID" />
-						</xsl:attribute>
-  						<div class="panel panel-info" style="margin: 5px 1px 1px 1px;">
-							<div class="bold panel-heading text-center" style="height: auto; padding: 0px;">
-								<i class="fa fa-eye">&#160;</i>
-								<i18n:text>xmlui.UFAL.artifactbrowser.item_view.file_preview</i18n:text>
-								<a role="button" data-toggle="collapse" class="pull-right">
-									<xsl:attribute name="href">
-										<xsl:text>#file_</xsl:text><xsl:value-of select="@ID" />
-									</xsl:attribute>								
-									<i class="fa fa-remove">&#160;</i>
-								</a>
-							</div>  						
-  							<div class="panel-body" style="max-height: 200px; overflow: scroll;">
-								<xsl:variable name="files">
-									<xsl:copy-of select="mets:Local/mets:file"/>
-								</xsl:variable>  						  							
-  								<xsl:choose>
-  									<xsl:when test="@MIMETYPE='text/plain'">
-			  							<xsl:value-of select="$files" disable-output-escaping="yes" /> . . . 			  							
-		  							</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="ft:parse($files)" disable-output-escaping="yes" />
-									</xsl:otherwise>
-	  							</xsl:choose>
-  							</div>
-						</div>
-					</div>					
-				</xsl:if>
-				<xsl:if test="@MIMETYPE='text/html'" >
-					<a class="filebutton label label-info" role="button" data-toggle="collapse">
-						<xsl:attribute name="href">
-							<xsl:text>#file_</xsl:text><xsl:value-of select="@ID" />
-						</xsl:attribute>					
-                    	<i class="fa fa-eye">&#160;</i>
-						<i18n:text>xmlui.UFAL.artifactbrowser.item_view.preview</i18n:text>
-					</a>
-					<div class="collapse">
-						<xsl:attribute name="id">
-							<xsl:text>file_</xsl:text><xsl:value-of select="@ID" />
-						</xsl:attribute>
-  						<div class="panel panel-info" style="margin: 5px 1px 1px 1px;">
-							<div class="bold panel-heading text-center" style="height: auto; padding: 0px;">
-								<i class="fa fa-eye">&#160;</i>
-								<i18n:text>xmlui.UFAL.artifactbrowser.item_view.file_preview</i18n:text>
-								<a role="button" data-toggle="collapse" class="pull-right">
-									<xsl:attribute name="href">
-										<xsl:text>#file_</xsl:text><xsl:value-of select="@ID" />
-									</xsl:attribute>								
-									<i class="fa fa-remove">&#160;</i>
-								</a>
-							</div>  						
-  							<div class="panel-body" style="max-height: 500px; overflow: hidden; padding: 0px;">
-  								 <iframe frameborder="0" scrolling="yes" height="500" width="100%">
-  								 	<xsl:attribute name="src">
-  								 		<xsl:value-of select="mets:FLocat[@LOCTYPE='URL']/@xlink:href" />
-  								 	</xsl:attribute>
-  								 	&#160;
-  								 </iframe>
-  							</div>
-						</div>
-					</div>									
+				<!-- previews -->
+				<xsl:if test="/mets:METS/mets:amdSec/mets:rightsMD/mets:mdWrap/mets:xmlData/license/@label='PUB'">
+                    <xsl:if test="mets:Local/mets:file">
+                        <a class="filebutton label label-info" role="button" data-toggle="collapse">
+                            <xsl:attribute name="href">
+                                <xsl:text>#file_</xsl:text><xsl:value-of select="@ID" />
+                            </xsl:attribute>
+                            <i class="fa fa-eye">&#160;</i>
+                            <i18n:text>xmlui.UFAL.artifactbrowser.item_view.preview</i18n:text>
+                        </a>
+                        <div class="collapse">
+                            <xsl:attribute name="id">
+                                <xsl:text>file_</xsl:text><xsl:value-of select="@ID" />
+                            </xsl:attribute>
+                            <div class="panel panel-info" style="margin: 5px 1px 1px 1px;">
+                                <div class="bold panel-heading text-center" style="height: auto; padding: 0px;">
+                                    <i class="fa fa-eye">&#160;</i>
+                                    <i18n:text>xmlui.UFAL.artifactbrowser.item_view.file_preview</i18n:text>
+                                    <a role="button" data-toggle="collapse" class="pull-right">
+                                        <xsl:attribute name="href">
+                                            <xsl:text>#file_</xsl:text><xsl:value-of select="@ID" />
+                                        </xsl:attribute>
+                                        <i class="fa fa-remove">&#160;</i>
+                                    </a>
+                                </div>
+                                <div class="panel-body" style="max-height: 200px; overflow: scroll;">
+                                    <xsl:variable name="files">
+                                        <xsl:copy-of select="mets:Local/mets:file"/>
+                                    </xsl:variable>
+                                    <xsl:choose>
+                                        <xsl:when test="@MIMETYPE='text/plain'">
+                                            <xsl:value-of select="$files" disable-output-escaping="yes" /> . . .
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="ft:parse($files)" disable-output-escaping="yes" />
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </div>
+                            </div>
+                        </div>
+                    </xsl:if>
+                    <xsl:if test="@MIMETYPE='text/html'" >
+                        <a class="filebutton label label-info" role="button" data-toggle="collapse">
+                            <xsl:attribute name="href">
+                                <xsl:text>#file_</xsl:text><xsl:value-of select="@ID" />
+                            </xsl:attribute>
+                            <i class="fa fa-eye">&#160;</i>
+                            <i18n:text>xmlui.UFAL.artifactbrowser.item_view.preview</i18n:text>
+                        </a>
+                        <div class="collapse">
+                            <xsl:attribute name="id">
+                                <xsl:text>file_</xsl:text><xsl:value-of select="@ID" />
+                            </xsl:attribute>
+                            <div class="panel panel-info" style="margin: 5px 1px 1px 1px;">
+                                <div class="bold panel-heading text-center" style="height: auto; padding: 0px;">
+                                    <i class="fa fa-eye">&#160;</i>
+                                    <i18n:text>xmlui.UFAL.artifactbrowser.item_view.file_preview</i18n:text>
+                                    <a role="button" data-toggle="collapse" class="pull-right">
+                                        <xsl:attribute name="href">
+                                            <xsl:text>#file_</xsl:text><xsl:value-of select="@ID" />
+                                        </xsl:attribute>
+                                        <i class="fa fa-remove">&#160;</i>
+                                    </a>
+                                </div>
+                                <div class="panel-body" style="max-height: 500px; overflow: hidden; padding: 0px;">
+                                     <iframe frameborder="0" scrolling="yes" height="500" width="100%">
+                                        <xsl:attribute name="src">
+                                            <xsl:value-of select="mets:FLocat[@LOCTYPE='URL']/@xlink:href" />
+                                        </xsl:attribute>
+                                        &#160;
+                                     </iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </xsl:if>
 				</xsl:if>
 			</div>			
 	</xsl:template>

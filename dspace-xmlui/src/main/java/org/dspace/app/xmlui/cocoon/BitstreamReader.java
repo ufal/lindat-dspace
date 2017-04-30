@@ -46,6 +46,7 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.disseminate.CitationDocument;
 import org.dspace.handle.HandleManager;
+import org.dspace.storage.bitstore.BitstreamStorageManager;
 import org.dspace.usage.UsageEvent;
 import org.dspace.utils.DSpace;
 import org.xml.sax.SAXException;
@@ -178,6 +179,10 @@ public class BitstreamReader extends AbstractReader implements Recyclable
     private File tempFile;
 
     private String redirectToURL;
+
+    private String XSendFileHeader;
+    private String XSendFilePathPrefix;
+    private String bitstreamPathRelativeToAssetstore;
 
     /**
      * Set up the bitstream reader.
@@ -442,6 +447,13 @@ public class BitstreamReader extends AbstractReader implements Recyclable
             } else {
             	this.redirectToURL = "";
             }
+
+            XSendFileHeader = new DSpace().getConfigurationService().getProperty("lr.XSendFileHeader");
+            XSendFilePathPrefix = new DSpace().getConfigurationService().getProperty("lr.XSendFilePathPrefix");
+            XSendFilePathPrefix = XSendFilePathPrefix == null ? "" : XSendFilePathPrefix;
+            //assume only one assetstore
+            bitstreamPathRelativeToAssetstore = XSendFilePathPrefix + BitstreamStorageManager.getIntermediatePath(bitstream.get_internal_id()) +
+                    bitstream.get_internal_id();
         }
         catch (SQLException sqle)
         {
@@ -796,7 +808,16 @@ public class BitstreamReader extends AbstractReader implements Recyclable
 
         try
         {
-            if(org.apache.commons.lang3.StringUtils.isNotBlank(this.redirectToURL)){
+            if(org.apache.commons.lang3.StringUtils.isNotBlank(this.XSendFileHeader)){
+                //path should take into the account the nginx inner location (eg. alias for .../assetstore)
+                //or what you allow in apache with XSendFilePath
+                //this is a header only response, could do even without opening in/out streams
+                //any authorization is handled during setup
+                //other headers (mime-type, content-dipsosition, ...) not changed
+                response.setHeader(this.XSendFileHeader, this.bitstreamPathRelativeToAssetstore);
+
+            }
+            else if(org.apache.commons.lang3.StringUtils.isNotBlank(this.redirectToURL)){
                 response.sendRedirect(this.redirectToURL);
             }else {
                 if (byteRange != null) {
@@ -881,6 +902,9 @@ public class BitstreamReader extends AbstractReader implements Recyclable
         this.tempFile = null;
         this.item = null;
         this.redirectToURL = null;
+        this.XSendFileHeader = null;
+        this.XSendFilePathPrefix = null;
+        this.bitstreamPathRelativeToAssetstore = null;
         super.recycle();
     }
 

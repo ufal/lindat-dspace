@@ -20,6 +20,12 @@ public interface IFunctionalities extends IShibbolethAuthentication, IDatabase, 
 	public boolean isFunctionalityEnabled(String functionalityName);
 
 	/**
+	 *
+	 * @return Additional parameters for the error message
+	 */
+	Object[] getErrorMessageParams();
+
+	/**
 	 * Function returns the property value for the key.
 	 * 
 	 * @param key
@@ -35,7 +41,7 @@ public interface IFunctionalities extends IShibbolethAuthentication, IDatabase, 
 	 * @param message
 	 */
 	void setErrorMessage(String message);
-	void setErrorMessage(String message, boolean append_default_msg);
+	void setErrorMessage(String message, boolean append_default_msg, Object... params);
 
 	/**
 	 * Function gets the error to be viewed if something goes wrong.

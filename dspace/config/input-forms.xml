@@ -95,6 +95,19 @@
 
                 <field>
                     <dc-schema>dc</dc-schema>
+                    <dc-element>relation</dc-element>
+                    <dc-qualifier>isreferencedby</dc-qualifier>
+                    <repeatable>true</repeatable>
+                    <label>input_forms.field.dc.relation.isreferencedby.label</label>
+                    <input-type>onebox</input-type>
+                    <hint>input_forms.field.dc.relation.isreferencedby.hint</hint>
+                    <required/>
+                    <regexp>http.*</regexp>
+                    <regexp-warning>input_forms.field.dc.relation.isreferencedby.regexp-warning</regexp-warning>
+                </field>
+
+                <field>
+                    <dc-schema>dc</dc-schema>
                     <dc-element>date</dc-element>
                     <dc-qualifier>issued</dc-qualifier>
                     <repeatable>false</repeatable>

@@ -11,6 +11,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import cz.cuni.mff.ufal.DSpaceApi;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -37,6 +38,7 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
 
     public static String schema = "local";
     public static String element = "bitstream";
+    public static String qualifier = "file";
 
     private int status = Curator.CURATE_UNSET;
 
@@ -74,7 +76,7 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
 
 	boolean processItem(Item item) throws SQLException, AuthorizeException {
         int processed = 0;
-        for ( Bundle bundle : item.getBundles() ) {
+        for ( Bundle bundle : item.getBundles("ORIGINAL") ) {
             for ( Bitstream b : bundle.getBitstreams() ) {
                 if (OK == processBitstream(b)) {
                     processed += 1;
@@ -150,7 +152,19 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
     }
 
     static int addBitstreamContent(Bitstream b) throws SQLException, AuthorizeException {
-        b.clearMetadata(schema, element, "file", Item.ANY);
+        Context context = new Context(Context.READ_ONLY);
+        context.setCurrentUser(null);
+        try {
+            DSpaceApi.authorizeBitstream(context, b);
+        }catch (AuthorizeException e){
+            //Anonymous user not authorized don't generate preview
+            context.complete();
+            return SKIPPED;
+        }finally {
+            context.complete();
+        }
+
+        b.clearMetadata(schema, element, qualifier, Item.ANY);
 
         //
         try {
@@ -166,13 +180,13 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
 	                String content = String.format(
 	                    "%s|%d", entry.getName(), entry.getSize()
 	                );
-	                b.addMetadata( schema, element, "file", Item.ANY, content );
+	                b.addMetadata( schema, element, qualifier, Item.ANY, content );
 	            }
             } else {
             	InputStreamReader r = new InputStreamReader(is);
             	char cbuf[] = new char[1000];
             	r.read(cbuf, 0, 1000);
-            	b.addMetadata( schema, element, "file", Item.ANY, new String(cbuf) );            	
+            	b.addMetadata( schema, element, qualifier, Item.ANY, new String(cbuf) );
             }
         } catch (Exception e) {
             log.error(e);

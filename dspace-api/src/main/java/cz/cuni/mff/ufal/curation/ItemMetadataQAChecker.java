@@ -234,7 +234,7 @@ public class ItemMetadataQAChecker extends AbstractCurationTask {
         Metadatum[] dcs_type = item.getMetadataByMetadataString("dc.type");
         // no metadata?
         if ( dcs_type == null || dcs_type.length == 0) {
-            throw new CurateException("Does not dc.type metadata",
+            throw new CurateException("Does not have dc.type metadata",
                 Curator.CURATE_FAIL );
         }
         

@@ -7,12 +7,15 @@
  */
 package cz.cuni.mff.ufal.dspace.app.xmlui.aspect.eperson;
 
+import cz.cuni.mff.ufal.DSpaceApi;
+import cz.cuni.mff.ufal.DSpaceXmluiApi;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.dspace.app.xmlui.aspect.eperson.FailedAuthentication;
 import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
+import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.ConfigurationManager;
 import org.xml.sax.SAXException;
@@ -24,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * modified for LINDAT/CLARIN
@@ -45,14 +49,16 @@ public class ShibFailedAuthentication extends FailedAuthentication {
 	public void addBody(Body body) throws SAXException, WingException, UIException, SQLException, IOException, AuthorizeException {
 
 		HttpServletResponse response = (HttpServletResponse)objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-		//can't have empty body, sould not be visible, there's a redirect
-		body.addDivision("shib_failed_login").addPara("There was an error");
+		Division div = body.addDivision("shib_failed_login");
+		div.setHead(T_h1);
 		String redirectTo = ConfigurationManager.getProperty("dspace.url");
 
 		String ourEntityId = ConfigurationManager.getProperty("authentication-shibboleth","spEntityId");
 
 		Object o = context.fromCache(cz.cuni.mff.ufal.Headers.class, 1);
 		if ( o != null ) {
+			//can't have empty body, sould not be visible, there's a redirect
+			div.addPara("There was an error");
 			final Map<String, List<String>> headers = ((cz.cuni.mff.ufal.Headers) o).get();
 			String idpEntityId = headers.get("shib-identity-provider").get(0);
 			if(isBlank(idpEntityId)){
@@ -62,9 +68,12 @@ public class ShibFailedAuthentication extends FailedAuthentication {
 
 			redirectTo = String.format("%s/page/error?idpEntityId=%s&cc=%s&ourEntityId=%s",
 					redirectTo, idpEntityId, cc, ourEntityId);
+			response.sendRedirect(response.encodeRedirectURL(redirectTo));
 
+		}else if(isNotBlank(DSpaceApi.getFunctionalityManager().getErrorMessage())){
+			//see cz.cuni.mff.ufal.dspace.authenticate.ShibAuthentication#225 - DSpaceApi.getFunctionalityManager().setErrorMessage
+			DSpaceXmluiApi.app_xmlui_aspect_eperson_postError(div);
 		}
-		response.sendRedirect(response.encodeRedirectURL(redirectTo));
 	}
 
 	private static String find_idp( Map<String, java.util.List<String>> headers ) {

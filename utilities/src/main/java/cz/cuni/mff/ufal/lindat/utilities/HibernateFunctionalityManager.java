@@ -63,13 +63,18 @@ public class HibernateFunctionalityManager implements IFunctionalities {
 	}
 
 	@Override
-	public void setErrorMessage(String message, boolean append_default_msg) {
-		Variables.setErrorMessage(message, append_default_msg);
+	public void setErrorMessage(String message, boolean append_default_msg, Object... params) {
+		Variables.setErrorMessage(message, append_default_msg, params);
 	}
 
 	@Override
 	public String getErrorMessage() {
 		return Variables.getErrorMessage();
+	}
+
+	@Override
+	public Object[] getErrorMessageParams(){
+		return Variables.getErrorMessageParams();
 	}
 	
 	@Override

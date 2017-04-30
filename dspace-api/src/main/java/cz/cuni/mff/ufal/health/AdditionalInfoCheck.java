@@ -16,9 +16,13 @@ import org.dspace.health.Check;
 import org.dspace.health.ReportInfo;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 
 public class AdditionalInfoCheck extends Check {
+
+    public static final String beancountersPath = "/proc/user_beancounters";
 
     @Override
     public String run( ReportInfo ri ) {
@@ -54,9 +58,11 @@ public class AdditionalInfoCheck extends Check {
         ret +=
             "Clarin centers:   https://centres.clarin.eu/\n";
 
-        ret += IOUtils.run(
-            new File(ConfigurationManager.getProperty("dspace.dir")),
-            new String[]{"sudo", "cat", "/proc/user_beancounters"});
+        if(Files.exists(Paths.get(beancountersPath))) {
+            ret += IOUtils.run(
+                    new File(ConfigurationManager.getProperty("dspace.dir")),
+                    new String[]{"sudo", "cat", beancountersPath});
+        }
 
         return ret;
     }

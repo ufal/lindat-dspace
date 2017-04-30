@@ -655,7 +655,10 @@
 	<message key="xmlui.EPerson.FailedAuthentication.title">Autentifikace se nezdařila</message>
 	<message key="xmlui.EPerson.FailedAuthentication.trail">Nezdařená autentifikace</message>
 	<message key="xmlui.EPerson.FailedAuthentication.h1">Autentifikace se nezdařila</message>
-	
+
+	<!-- cz.cuni.mff.ufal.dspace.authenticate.shibboleth.ShibEPerson -->
+	<message key="xmlui.ShibEPerson.locked_email">Váš email ({0}) již používá jiný uživatel. Je také možné, že se přihlašujete přes jinou instituci než minule. Pro více informací prosím kontaktujte <a class="helpdesk-tolink">poradnu</a>.</message>
+
 	<!-- Login xml files -->
 	<message key="xmlui.eperson.noAuthMethod.head">Metoda autentifikace nebyla nalezena</message>
 	<message key="xmlui.eperson.noAuthMethod.p1">Nebyla nalezena žádná metoda autentifikace. Prosím kontaktujte <a class="helpdesk-tolink">poradnu</a>.</message>
@@ -2656,6 +2659,7 @@
 	<message key="xmlui.dri2xhtml.METS-1.0.item-no-files">K tomuto záznamu nejsou připojeny žádné soubory.</message>
 
 	<message key="xmlui.ufal.METS-1.0.item-collections">Kolekce</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-relation-isreferencedby">Odkaz na záznam&#160;v</message>
 
 	<message key="xmlui.dri2xhtml.METS-1.0.size-bytes">{0} bajtů</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.size-kilobytes">KB</message>
@@ -3471,6 +3475,9 @@
 	<message key="input_forms.complex_definitions.funding.3_projname.label">Zdroj financí (jméno projektku)</message>
 	<message key="input_forms.complex_definitions.funding.5_openaire_id.label">EU Project Identifier (OpenAIRE)</message>
 	<message key="input_forms.complex_definitions.sizeInfo.2_unit.label">Jednotka</message>
+	<message key="input_forms.field.dc.relation.isreferencedby.label">Odkazy na záznam</message>
+	<message key="input_forms.field.dc.relation.isreferencedby.hint">Odkaz na původní článek, který zmiňuje tento záznam.</message>
+	<message key="input_forms.field.dc.relation.isreferencedby.regexp-warning">URL musi začínat http/https</message>
 
 	<!-- cz.cuni.mff.ufal.ContractPage -->
 	<message key="xmlui.ContractPage.title">Smlouva o distribuci dat</message>

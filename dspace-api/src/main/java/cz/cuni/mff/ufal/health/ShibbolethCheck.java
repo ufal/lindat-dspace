@@ -105,10 +105,8 @@ public class ShibbolethCheck extends Check {
             org.apache.commons.io.IOUtils.copy(
                 new URL(ConfigurationManager.getProperty("dspace.url")
                     + "/discojuice/feeds").openStream(), writer);
-            String jsonp = writer.toString();
+            String json = writer.toString();
             // end download
-            String json = jsonp.substring(jsonp.indexOf("(") + 1,
-                jsonp.lastIndexOf(")")); // strip the dj_md_1()
             Set<String> entities = new HashSet<String>();
             JSONParser parser = new JSONParser();
             JSONArray entityArray = (JSONArray) parser.parse(json);

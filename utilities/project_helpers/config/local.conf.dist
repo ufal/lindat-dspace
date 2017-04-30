@@ -384,4 +384,12 @@ lr.spEntityId = http://example.com/sp/shibboleth
 lr.shortener.enabled = false
 lr.shortener.handle.prefix = 1234
 
+#####
+#
+# XSendFile header
+#
+####
+lr.XSendFileHeader =
+lr.XSendFilePathPrefix =
+
 lr.compile.time=

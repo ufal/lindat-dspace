@@ -33,6 +33,7 @@ public class Variables {
 	 */
 	private static Properties properties = new Properties();
 	private static String _errorMessage = "";
+	private static Object[] _errorMessageParams = null;
 
 
 	/**
@@ -105,7 +106,7 @@ public class Variables {
 	 * 
 	 * @param object
 	 */
-	public static void setErrorMessage(String message, boolean append_default_msg) {
+	public static void setErrorMessage(String message, boolean append_default_msg, Object... params) {
 		_errorMessage = message;
 		if(message!=null && !message.equals("")) {
 			log.log(Level.ERROR, "Message '" + message + "' has been set up!");
@@ -113,6 +114,7 @@ public class Variables {
 		if (null != message && append_default_msg) {
 			_errorMessage += " For more information please contact our Help Desk.";
 		}
+		_errorMessageParams = params;
 	}
 
 	public static void setErrorMessage(String message) {
@@ -127,6 +129,10 @@ public class Variables {
 		if (_errorMessage == null)
 			return "";
 		return _errorMessage;
+	}
+
+	public static Object[] getErrorMessageParams(){
+		return _errorMessageParams;
 	}
 
 }

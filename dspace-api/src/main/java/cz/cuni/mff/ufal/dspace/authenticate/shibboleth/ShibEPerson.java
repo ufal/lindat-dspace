@@ -195,9 +195,7 @@ public class ShibEPerson
                     int delimiter = oldNetid.lastIndexOf('[');
                     String oldIdp = oldNetid.substring( delimiter+1, oldNetid.length()-1);
                     oldNetid = oldNetid.substring(0, delimiter);
-                    functionalityManager.setErrorMessage(
-                            String.format("Your email (%s) is already associated with a different user. " +
-                            		"It is also possible that you used a different identity provider to login before.", email));
+                    functionalityManager.setErrorMessage("xmlui.ShibEPerson.locked_email", false, email);
                     //eperson=null;
                     throw new AuthorizeException("The identified EPerson based upon Shibboleth email header, " +
                             "'"+emailHeader+"'='"+email+"', is locked to another netid: '"+eperson.getNetid()+"'. " +
