@@ -142,7 +142,7 @@ public class LicenseManager
     private static void init()
     {
         File licenseFile = new File(ConfigurationManager.getProperty("dspace.dir")
-                + File.separator + "config" + File.separator + "default.license");
+                + File.separator + "config" + File.separator + "licenses" + File.separator + "default.license");
 
         FileInputStream  fir = null;
         InputStreamReader ir = null;

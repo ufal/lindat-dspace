@@ -16,6 +16,7 @@ import org.dspace.core.LicenseManager;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.io.File;
 import java.sql.SQLException;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -29,18 +30,6 @@ public class ContractPage extends AbstractDSpaceTransformer {
     private static final Message T_collection_name = message("xmlui.ContractPage.collection_name");
     private static final Message T_explain_non_localized_license = message("xmlui.ContractPage.explain_non_localized_license");
 
-    private static final String alternativeLicenseText;
-    static{
-        String alternativePath = ConfigurationManager.getProperty("lr","license.alternative.path");
-        if(isNotBlank(alternativePath)){
-            alternativeLicenseText = LicenseManager.getLicenseText(alternativePath);
-        }else{
-            alternativeLicenseText = null;
-        }
-    }
-
-
-	
     @Override
     public void addPageMeta(PageMeta pageMeta) throws SAXException, WingException, UIException, SQLException, IOException, AuthorizeException {
     	pageMeta.addMetadata("title").addContent(T_title);
@@ -58,10 +47,10 @@ public class ContractPage extends AbstractDSpaceTransformer {
 
         if(!context.getCurrentLocale().equals(I18nUtil.getDefaultLocale()) && showExplanation ){
             division.addPara().addContent(T_explain_non_localized_license);
-            if(isNotBlank(alternativeLicenseText)){
-                addLicense(division, "default_license_alternative", T_collection_name.parameterize("Default license"),
-                        alternativeLicenseText);
-            }
+	    String alternativeLicensePath = ConfigurationManager.getProperty("dspace.dir") + File.separator + "config" + File.separator + "licenses" + File.separator + "alternative_" + context.getCurrentLocale().getLanguage() + ".license";
+	    String alternativeLicenseText = LicenseManager.getLicenseText(alternativeLicensePath);
+	    addLicense(division, "default_license_alternative", T_collection_name.parameterize("Default license"),
+		       alternativeLicenseText);
         }
 
 		for(Collection col : Collection.findAll(context)){
