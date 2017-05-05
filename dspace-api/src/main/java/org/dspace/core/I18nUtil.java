@@ -321,7 +321,8 @@ public class I18nUtil
         final String DEF_LIC_FILE = "default";
         final String FILE_TYPE = ".license";
         String defsFilename = ConfigurationManager.getProperty("dspace.dir")
-                + File.separator + "config" + File.separator + DEF_LIC_FILE;
+                + File.separator + "config" + File.separator + "licenses" 
+                + File.separator + DEF_LIC_FILE;
         
         fileName = getFilename(locale, defsFilename, FILE_TYPE);
         
