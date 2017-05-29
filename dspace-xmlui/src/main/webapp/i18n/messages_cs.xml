@@ -3308,10 +3308,10 @@
 	<message key="input_forms.field.dc.description.hint">Popište nahrávaná data.</message>
 	<message key="input_forms.field.dc.description.required">Uveďte prosím popis.</message>
 	<message key="input_forms.field.dc.language.iso.label">Jazyk</message>
-	<message key="input_forms.field.dc.language.iso.hint">Vyberte jazyky, jichž se data tohoto záznamu týkají. Je možné zvolit více jazyků. Začnete-li psát, objeví se nápověda.</message>
+	<message key="input_forms.field.dc.language.iso.hint">Vyberte jazyky, jichž se data tohoto záznamu týkají. Je možné zvolit více jazyků. Začnete-li psát, objeví se nápověda. Je lepší vyjmenovat všechny dotčené jazyky (pokud jich je větší množství, kontaktujte podporu), než používat iso kód 'mul'. </message>
 	<message key="input_forms.field.dc.language.iso.required">Prosím zvolte jazyk.</message>
 	<message key="input_forms.field.dc.language.iso1.label">Jazyk</message>
-	<message key="input_forms.field.dc.language.iso1.hint">Vyberte jazyk, kterým se mluví v nahrávkách tohoto záznamu. Je možné zvolit více jazyků. Začnete-li psát, objeví se nápověda.</message>
+	<message key="input_forms.field.dc.language.iso1.hint">Pokud je nástroj/služba jazykově závislá, uveďte potřebné jazyky. Jinak můžete nechat nevyplněné. Je možné zvolit více jazyků. Začnete-li psát, objeví se nápověda.</message>
 	<message key="input_forms.field.dc.subject.label">Klíčová slova</message>
 	<message key="input_forms.field.dc.subject.hint">Uveďte vhodná klíčová slova, nebo fráze a zmáčkněte tlačítko přidat.
 		Klíčová slova buď přidávejte po jednom, nebo je oddělte čárkou, nebo středníkem. Začnete-li psát, objeví se nápověda.

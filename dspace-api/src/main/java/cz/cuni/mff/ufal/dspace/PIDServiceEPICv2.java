@@ -47,9 +47,13 @@ public class PIDServiceEPICv2 extends AbstractPIDService
     {
         String PID = (String) params.get(PARAMS.PID.toString());
         String data = (String) params.get(PARAMS.DATA.toString());
+        String prefix = null;
 
-        if (PID == null)
+        if (PID == null) {
             PID = "";
+        }else{
+            prefix = PID.startsWith("/") ? PID.split("/", 3)[1] : PID.split("/", 2)[0];
+        }
         if (!PID.startsWith("/") && !PIDServiceURL.endsWith("/"))
             PID = "/" + PID;
 
@@ -92,9 +96,15 @@ public class PIDServiceEPICv2 extends AbstractPIDService
         StringBuffer response = new StringBuffer();
         if (responseCode == 201)
         {
-            int index = PIDServiceURL.endsWith("/") ? PIDServiceURL.length()
-                    : (PIDServiceURL.length() + 1);
-            response.append(conn.getHeaderField("Location").substring(index));
+            String location = conn.getHeaderField("Location");
+            int index;
+            if(prefix != null){
+                index = location.indexOf(prefix);
+            }else {
+                index = PIDServiceURL.endsWith("/") ? PIDServiceURL.length()
+                        : (PIDServiceURL.length() + 1);
+            }
+            response.append(location.substring(index));
         }
         else
         {

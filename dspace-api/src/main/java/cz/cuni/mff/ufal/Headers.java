@@ -110,8 +110,8 @@ public class Headers
                 // prevent an endless loop in an error condition.
             	header = header.substring(1,header.length());
 
-            } else if (idx > 0 && header.charAt(idx-1) != '\\' ) {
-                // The attribute starts with an escaped semicolon
+            } else if (idx > 0 && header.charAt(idx-1) == '\\' ) {
+                // found an escaped semicolon; move on
                 idx++;
             } else if ( idx > 0) {
                 // First extract the value and store it on the list.

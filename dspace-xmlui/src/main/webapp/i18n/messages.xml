@@ -3034,12 +3034,11 @@
 	<message key="input_forms.field.dc.description.required">Please give us a description</message>
 	<message key="input_forms.field.dc.language.iso.label">Language</message>
 	<message key="input_forms.field.dc.language.iso.hint">Select the language of the main content of the item. Multiple languages are possible. Start
-		typing the language and use autocomplete form that will appear if applicable.
+		typing the language and use autocomplete form that will appear if applicable. Better to list all the languages then to use the 'mul' iso code (if there are too many, contact support).
 	</message>
 	<message key="input_forms.field.dc.language.iso.required">Please choose a language for the resource.</message>
 	<message key="input_forms.field.dc.language.iso1.label">Language</message>
-	<message key="input_forms.field.dc.language.iso1.hint">Select the spoken language (in ISO 639-3 format) of the main content of the item (use "N/A" if
-		not applicable). Multiple languages are possible. Start typing the language and use autocomplete
+	<message key="input_forms.field.dc.language.iso1.hint">If the tool/service is language dependent, select the appropriate language(s). Otherwise leave the field empty. Multiple languages are possible. Start typing the language and use autocomplete
 		form that will appear.
 	</message>
 	<message key="input_forms.field.dc.subject.label">Subject Keywords</message>

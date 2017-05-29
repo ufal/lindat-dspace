@@ -436,10 +436,10 @@
 								<xsl:sort select="isocodes:getLangForCode(node())" />
 								<a>
 									<xsl:attribute name="href"><xsl:copy-of select="$contextPath"/>/browse?value=<xsl:copy-of select="isocodes:getLangForCode(node())" />&amp;type=language</xsl:attribute>
-									<span class="language-iso-code"><xsl:copy-of select="isocodes:getLangForCode(node())" /></span>									
+									<span class="language-iso-code"><xsl:copy-of select="isocodes:getLangForCode(node())" /></span>
 								</a>
 								<xsl:if
-									test="count(following-sibling::dim:field[@element='language'][@qualifier='iso']) != 0">
+									test="position() != last()">
 									<xsl:text>, </xsl:text>
 								</xsl:if>
 							</xsl:for-each>

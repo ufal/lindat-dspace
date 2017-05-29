@@ -2,17 +2,14 @@
 package cz.cuni.mff.ufal.dspace.authenticate.shibboleth;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
+import org.dspace.services.ConfigurationService;
+import org.dspace.utils.DSpace;
 
 /**
  * Try to refactor the Shibboleth mess.
@@ -117,8 +114,37 @@ public class ShibGroup
 
                 } // foreach affiliations
             } // if affiliations
-            
-            
+
+            //attribute -> group mapping
+            //check shibboleth attribute ATTR and put users having value ATTR_VALUE1 and ATTR_VALUE2 to GROUP1
+            //users having ATTR_VALUE3 to GROUP2
+            //groups must exist
+            //header.ATTR=ATTR_VALUE1=>GROUP1,ATTR_VALUE2=>GROUP1,ATTR_VALUE3=>GROUP2
+            final String lookFor = "header.";
+            ConfigurationService configurationService = new DSpace().getConfigurationService();
+            Properties allShibbolethProperties = ConfigurationManager.getProperties("authentication-shibboleth");
+            for(String propertyName : allShibbolethProperties.stringPropertyNames()){
+                //look for properties in authentication shibboleth that start with "header."
+                if(propertyName.startsWith(lookFor)){
+                    String headerName = propertyName.substring(lookFor.length());
+                    List<String> presentHeaderValues = shib_headers_.get(headerName);
+                    if(!presentHeaderValues.isEmpty()) {
+                        //if shibboleth sent any attributes under the headerName
+                        String[] values2groups = configurationService.getPropertyAsType(
+                                "authentication-shibboleth." + propertyName, String[].class);
+                        for (String value2group : values2groups) {
+                            String[] value2groupParts = value2group.split("=>", 2);
+                            String headerValue = value2groupParts[0].trim();
+                            String assignedGroup = value2groupParts[1].trim();
+                            if(presentHeaderValues.contains(headerValue)){
+                                //our configured header value is present so add a group
+                                groups.addAll(string2groups(assignedGroup));
+                            }
+                        }
+                    }
+                }
+            }
+
             /* <UFAL>
              * Default group for shib authenticated users
              */

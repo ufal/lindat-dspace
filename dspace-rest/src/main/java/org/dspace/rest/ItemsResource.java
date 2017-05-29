@@ -36,10 +36,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeManager;
-import org.dspace.content.BitstreamFormat;
-import org.dspace.content.Bundle;
-import org.dspace.content.ItemIterator;
-import org.dspace.content.Metadatum;
+import org.dspace.content.*;
 import org.dspace.content.service.ItemService;
 import org.dspace.eperson.Group;
 import org.dspace.rest.common.Bitstream;
@@ -439,6 +436,7 @@ public class ItemsResource extends Resource
             @QueryParam("name") String name, @QueryParam("description") String description,
             @QueryParam("groupId") Integer groupId, @QueryParam("year") Integer year, @QueryParam("month") Integer month,
             @QueryParam("day") Integer day, @QueryParam("userIP") String user_ip, @QueryParam("userAgent") String user_agent,
+            @QueryParam("file_mime_type") String fileMimeType,
             @QueryParam("xforwardedfor") String xforwardedfor, @Context HttpHeaders headers, @Context HttpServletRequest request)
             throws WebApplicationException
     {
@@ -479,14 +477,15 @@ public class ItemsResource extends Resource
             // Set bitstream name and description
             if (name != null)
             {
-                if (BitstreamResource.getMimeType(name) == null)
-                {
-                    dspaceBitstream.setFormat(BitstreamFormat.findUnknown(context));
+                BitstreamFormat bitstreamFormat = null;
+                if(fileMimeType != null){
+                    bitstreamFormat = BitstreamFormat.findByMIMEType(context, fileMimeType);
                 }
-                else
-                {
-                    dspaceBitstream.setFormat(BitstreamFormat.findByMIMEType(context, BitstreamResource.getMimeType(name)));
+                if(bitstreamFormat == null){
+                    bitstreamFormat = FormatIdentifier.guessFormat(context, dspaceBitstream);
                 }
+                //null bitstreamFormat results in unknown
+                dspaceBitstream.setFormat(bitstreamFormat);
                 dspaceBitstream.setName(name);
             }
             if (description != null)
