@@ -13,8 +13,7 @@ messages = {
     "dragndrop-upload-failed": "Ne morem prevzeti teh datotek.",
     "dragndrop-drop-here": "Spustite datoteko/e sem.",
     "upload-rejected-files": "Zavrnjene datoteke",
-    "upload-toolarge-help": "The following files are too large for conventional upload (limit is %s) or are empty (0 bytes). Please contact %s about how to upload these files."\
-    ,
+    "upload-toolarge-help": "The following files are too large for conventional upload (limit is %s) or are empty (0 bytes). Please contact %s about how to upload these files.",
     "upload-filename": "Ime datoteke",
     "upload-size": "Velikost",
     "upload-file-upload": "Prenos datoteke",
