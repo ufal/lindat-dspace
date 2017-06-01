@@ -6,7 +6,7 @@ import codecs
 
 script_directory = os.path.dirname(os.path.realpath(__file__))
 root_directory = script_directory + '/../../..'
-xml_i18n_directory = root_directory + '/dspace-xmlui/src/main/webapp/i18n'
+xml_i18n_directory = root_directory + '/dspace/modules/xmlui/src/main/webapp/i18n'
 js_i18n_directory = root_directory + '/dspace-xmlui/src/main/webapp/themes/UFAL/lib/js/messages'
 xml_en_joint_file_name = '/tmp/messages-en.xml'
 
