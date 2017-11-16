@@ -1217,7 +1217,7 @@
          <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+            <version>42.1.4.jre7</version>
          </dependency>
          <dependency>
             <groupId>com.oracle</groupId>
