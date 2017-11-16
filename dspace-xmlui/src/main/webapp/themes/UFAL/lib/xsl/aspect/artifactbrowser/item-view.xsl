@@ -715,12 +715,13 @@
                 <!-- other versions -->
                 <xsl:if
                         test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1 or count(dim:field[@element='relation' and @qualifier='replaces' and @mdschema='dc']) &gt;= 1">
-                    <div class="alert" id="replaced_by_alert">
+                    <div class="alert" id="versions">
                         <span style="dispaly: table-cell">
                             <i class="fa fa-info-circle fa-3x pull-left">&#160;</i>
                         </span>
                     <!-- replacedby info -->
                     <xsl:if test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1">
+                    <div id="replaced_by_alert">
                             <span style="display: table-cell">
                                  <xsl:choose>
                                      <xsl:when test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) = 1">
@@ -741,6 +742,7 @@
                                      </div>
                                  </xsl:for-each>
                              </span>
+                    </div>
                     </xsl:if>
                         <span style="display: table-cell">
                             <a href="#">
@@ -748,6 +750,7 @@
                             </a>
                         </span>
                     </div>
+                </xsl:if>
                     <dl class="dl-horizontal">
                         <dt style="text-align: left">
                             <a class="btn btn-link" style="padding-left:0">
@@ -759,7 +762,6 @@
                             &#160;
                         </dd>
                     </dl>
-                </xsl:if>
 
 			</xsl:when>
 
