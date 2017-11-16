@@ -28,6 +28,9 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 /**
  * Display an item restricted message.
  *
@@ -72,6 +75,9 @@ public class RestrictedItem extends AbstractDSpaceTransformer //implements Cache
             message("xmlui.ArtifactBrowser.RestrictedItem.para_item_claimed");
     private static final Message T_para2_item_claimed =
             message("xmlui.ArtifactBrowser.RestrictedItem.para2_item_claimed");
+
+    private static final Message T_para_reason =
+            message("xmlui.ArtifactBrowser.RestrictedItem.para_reason");
 
 
     // withdrawn
@@ -243,40 +249,41 @@ public class RestrictedItem extends AbstractDSpaceTransformer //implements Cache
                 Message title = T_head_item;
                 Message status = T_para_item_restricted;
                 //if item is withdrawn, display withdrawn status info
-        if (item.isWithdrawn()) 
-                {
+        if (item.isWithdrawn()) {
+            String itemTitle = item.getMetadata("dc.title");
+            unauthorized.setHead(itemTitle);
+            Metadatum[] contributorAuthor = item.getMetadataByMetadataString("dc.contributor.author");
+            Metadatum[] contributorOther = item.getMetadataByMetadataString("dc.contributor.other");
+            Metadatum[] mds = ArrayUtils.addAll(contributorAuthor, contributorOther);
+            StringBuilder authors = new StringBuilder();
+            if(mds != null && mds.length > 0){
+                String separator = "";
+                for(Metadatum md : mds){
+                    authors.append(separator).append(md.value);
+                    separator = "; ";
+                }
+            }
+            if(authors.length() > 0) {
+                unauthorized.addItem(authors.toString());
+            }
             if ( item.isReplacedBy() ) {
-                String itemTitle = item.getMetadata("dc.title");
-                unauthorized.setHead(itemTitle);
-                Metadatum[] contributorAuthor = item.getMetadataByMetadataString("dc.contributor.author");
-                Metadatum[] contributorOther = item.getMetadataByMetadataString("dc.contributor.other");
-                Metadatum[] mds = ArrayUtils.addAll(contributorAuthor, contributorOther);
-                StringBuilder authors = new StringBuilder();
-                if(mds != null && mds.length > 0){
-                    String separator = "";
-                    for(Metadatum md : mds){
-                        authors.append(separator).append(md.value);
-                        separator = "; ";
-                    }
-                }
-                if(authors.length() > 0) {
-                    unauthorized.addItem(authors.toString());
-                }
                 unauthorized.addItem(T_head_item_claimed);
-            	unauthorized.addItem(T_para_item_claimed);
+                unauthorized.addItem(T_para_item_claimed);
                 for(String replaced : item.getReplacedBy()){
                     unauthorized.addItem().addXref(replaced, replaced);
                 }
-            	unauthorized.addItem(T_para2_item_claimed);
-            	return;
+                unauthorized.addItem(T_para2_item_claimed);
             }else{
-                unauthorized.setHead(T_head_item_withdrawn);            	
-            	unauthorized.addItem(T_para_item_withdrawn.parameterize(identifier));
+                unauthorized.addItem(T_head_item_withdrawn);
+                unauthorized.addItem(T_para_item_withdrawn.parameterize(identifier));
+                Metadatum[] reasons = item.getMetadataByMetadataString("local.withdrawn.reason");
+                if(reasons.length > 0 && isNotBlank(reasons[0].value)){
+                    unauthorized.addItem(T_para_reason);
+                    unauthorized.addItem(reasons[0].value);
+                }
                 unauthorized.addItem("item_status", T_para_item_withdrawn.getKey()).addContent(status);
-                return;
-        }
-            // 
-
+            }
+            return;
         }// if user is not authenticated, display info to authenticate
         else if (context.getCurrentUser() == null) 
         {

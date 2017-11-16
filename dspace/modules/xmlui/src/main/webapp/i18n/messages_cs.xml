@@ -368,6 +368,8 @@
 	<message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_claimed">Tento záznam najdete na následujících místech:</message>
 	<message key="xmlui.ArtifactBrowser.RestrictedItem.para2_item_claimed">Autoři tohoto záznamu nás požádali o jeho skrytí. <strong>Stále máme všechna data i metadata původního záznamu.</strong> K záznamu by mělo být přistupováno výhradně přes výše uvedené url. Pokud z nějakého důvodu potřebujete původní záznam, kontaktujte naši <a class="helpdesk-tolink">poradnu</a>.</message>
 
+	<message key="xmlui.ArtifactBrowser.RestrictedItem.para_reason">Důvod odstranění:</message>
+
 	<message key="xmlui.administrative.item.ConfirmItemForm.withdraw_para_extraInfo">Můžete vyplnit informace navíc. Handle, pokud byl záznam přesunut jinam a/nebo důvod pro odstranění.</message>
 	<message key="xmlui.administrative.item.ConfirmItemForm.withdraw_help_extra_handle">Pokud toto vyplníte uživatel zobrazující tento záznam uvidí zprávu s odkazem na nové PID.</message>
 	<message key="xmlui.administrative.item.ConfirmItemForm.withdraw_label_extra_handle">Nové PID:</message>
@@ -383,7 +385,7 @@
 	<message key="xmlui.ArtifactBrowser.RestrictedItem.unknown">neznámý</message>
 	<message key="xmlui.ArtifactBrowser.RestrictedItem.login">Pokračujte na přihlašovací obrazovku.</message>
 	
-        <message key="xmlui.ArtifactBrowser.RestrictedItem.head_item_withdrawn">Tento záznam byl vyřazen</message>
+	<message key="xmlui.ArtifactBrowser.RestrictedItem.head_item_withdrawn"><h4>Tento záznam byl vyřazen</h4></message>
 	<message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_withdrawn">Vybraný záznam byl vyřazen a není nadále dostupný.</message>
 	<message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_restricted_auth">Vybraný záznam je záznam s omezeným přístupem a pro jeho zobrazení musíte mít potřebná oprávnění. Prosím, pro zobrazení tohoto záznamu se přihlaste.</message>
 	<message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_restricted">Váš účet nemá potřebná oprávnění pro zobrazení tohoto záznamu. Jestli máte jakékoliv nejasnosti, obraťte se na <a class="helpdesk-tolink">poradnu</a>.</message>

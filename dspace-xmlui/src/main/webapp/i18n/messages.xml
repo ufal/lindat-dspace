@@ -353,7 +353,9 @@
     <message key="xmlui.ArtifactBrowser.RestrictedItem.head_item_claimed"><h4>This item is managed by another repository</h4></message>
     <message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_claimed">You will find this item at the following location(s):</message>
     <message key="xmlui.ArtifactBrowser.RestrictedItem.para2_item_claimed">The author(s) asked us to hide this submission. <strong>We still keep all the data and metadata of the original submission</strong> but the submission is now located at the above url(s). If you need the contents of the original submission, contact us at our <a class="helpdesk-tolink">Help Desk</a>.</message>
-    
+
+    <message key="xmlui.ArtifactBrowser.RestrictedItem.para_reason">The reason for withdrawal:</message>
+
     <message key="xmlui.administrative.item.ConfirmItemForm.withdraw_para_extraInfo">You may wish to provide some extra information; a handle in case the item was moved someplace else and/or reason for the removal.</message>
     <message key="xmlui.administrative.item.ConfirmItemForm.withdraw_help_extra_handle">If you fill this, users wanting to view the item will get special message. With a link created from the new PID.</message>
     <message key="xmlui.administrative.item.ConfirmItemForm.withdraw_label_extra_handle">The new PID:</message>
@@ -369,7 +371,7 @@
 	<message key="xmlui.ArtifactBrowser.RestrictedItem.unknown">unknown</message>
         <message key="xmlui.ArtifactBrowser.RestrictedItem.login">Proceed to login screen</message>
 
-        <message key="xmlui.ArtifactBrowser.RestrictedItem.head_item_withdrawn">This item is withdrawn</message>
+        <message key="xmlui.ArtifactBrowser.RestrictedItem.head_item_withdrawn"><h4>This item is withdrawn</h4></message>
         <message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_withdrawn">The selected item is withdrawn and is no longer available.</message>
         <message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_restricted_auth">The selected item is access restricted and requires credentials to view. Please login to access the item.</message>
         <message key="xmlui.ArtifactBrowser.RestrictedItem.para_item_restricted">Your user account does not have the credentials to view this item. Please contact the <a class="helpdesk-tolink">Help Desk</a> if you have any questions.</message>
