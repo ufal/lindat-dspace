@@ -712,47 +712,56 @@
 
 			<xsl:when test="$clause = 17 and $ds_item_view_toggle_url != ''">
 
-                <!-- replacedby info -->
-                <xsl:if test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1">
-	                <div class="alert" id="replaced_by_alert">
+                <!-- other versions -->
+                <xsl:if
+                        test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1 or count(dim:field[@element='relation' and @qualifier='replaces' and @mdschema='dc']) &gt;= 1">
+                    <div class="alert" id="replaced_by_alert">
                         <span style="dispaly: table-cell">
-	                        <i class="fa fa-info-circle fa-3x pull-left">&#160;</i>
+                            <i class="fa fa-info-circle fa-3x pull-left">&#160;</i>
                         </span>
+                    <!-- replacedby info -->
+                    <xsl:if test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1">
+                            <span style="display: table-cell">
+                                 <xsl:choose>
+                                     <xsl:when test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) = 1">
+                                             <i18n:text>xmlui.UFAL.artifactbrowser.item_view.replaced_one</i18n:text><br/>
+                                     </xsl:when>
+                                     <xsl:otherwise>
+                                             <i18n:text>xmlui.UFAL.artifactbrowser.item_view.replaced_many</i18n:text><br/>
+                                     </xsl:otherwise>
+                                 </xsl:choose>
+                                 <xsl:for-each select="dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']">
+                                     <div>
+                                         <a>
+                                             <xsl:attribute name="href">
+                                                     <xsl:value-of select="." />
+                                             </xsl:attribute>
+                                             <xsl:value-of select="." />
+                                         </a>
+                                     </div>
+                                 </xsl:for-each>
+                             </span>
+                    </xsl:if>
                         <span style="display: table-cell">
-	                         <xsl:choose>
-                                 <xsl:when test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) = 1">
-                                         <i18n:text>xmlui.UFAL.artifactbrowser.item_view.replaced_one</i18n:text><br/>
-                                 </xsl:when>
-                                 <xsl:otherwise>
-                                         <i18n:text>xmlui.UFAL.artifactbrowser.item_view.replaced_many</i18n:text><br/>
-                                 </xsl:otherwise>
-	                         </xsl:choose>
-	                         <xsl:for-each select="dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']">
-                                 <div>
-	                                 <a>
-	                                     <xsl:attribute name="href">
-	                                             <xsl:value-of select="." />
-	                                     </xsl:attribute>
-	                                     <xsl:value-of select="." />
-	                                 </a>
-                                 </div>
-	                         </xsl:for-each>
-	                     </span>
-	                </div>
-                </xsl:if>				
-				<dl class="dl-horizontal">
-					<dt style="text-align: left">
-						<a class="btn btn-link" style="padding-left:0">
-							<xsl:attribute name="href"><xsl:value-of select="$ds_item_view_toggle_url" /></xsl:attribute>
-							<i18n:text>xmlui.ArtifactBrowser.ItemViewer.show_full</i18n:text>
-						</a>					
-					</dt>
-					<dd class="text-right">
-						&#160;
-					</dd>
-				</dl>
+                            <a href="#">
+                                <i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text>
+                            </a>
+                        </span>
+                    </div>
+                    <dl class="dl-horizontal">
+                        <dt style="text-align: left">
+                            <a class="btn btn-link" style="padding-left:0">
+                                <xsl:attribute name="href"><xsl:value-of select="$ds_item_view_toggle_url" /></xsl:attribute>
+                                <i18n:text>xmlui.ArtifactBrowser.ItemViewer.show_full</i18n:text>
+                            </a>
+                        </dt>
+                        <dd class="text-right">
+                            &#160;
+                        </dd>
+                    </dl>
+                </xsl:if>
 
-			</xsl:when>						
+			</xsl:when>
 
 			<!-- recurse without changing phase if we didn't output anything -->
 			<xsl:otherwise>
