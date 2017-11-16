@@ -1063,6 +1063,37 @@ public class ItemsResource extends Resource
         return items.toArray(new Item[0]);
     }
 
+    @GET
+    @Path("/{item_id}/versions")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Item[] versions(@PathParam("item_id") Integer itemId, @QueryParam("expand") String expand,
+            @QueryParam("userIP") String user_ip, @QueryParam("userAgent") String user_agent,
+            @QueryParam("xforwardedfor") String xforwardedfor, @Context HttpHeaders headers, @Context HttpServletRequest request)
+            throws WebApplicationException{
+
+        org.dspace.core.Context context = null;
+        List<Item> items = new ArrayList<>();
+
+        try {
+            context = createContext(headers);
+            org.dspace.content.Item item = findItem(context, itemId, org.dspace.core.Constants
+                    .READ);
+            //List<org.dspace.content.Item> replaces = item.getReplacesChain();
+            TableRowIterator replacedBy = item.getReplacedByChain();
+            context.complete();
+
+        }catch (ContextException e){
+            processException("Could not fetch versions(id=" + itemId + "), ContextException." +
+                            " Message:" + e.getMessage(), context);
+        }catch (SQLException e){
+            processException("Could not fetch versions(id=" + itemId + "), SQLException." +
+                    " Message:" + e.getMessage(), context);
+        }finally {
+            processFinally(context);
+        }
+        return items.toArray(new Item[0]);
+    }
+
     /**
      * Find item from DSpace database. It is encapsulation of method
      * org.dspace.content.Item.find with checking if item exist and if user

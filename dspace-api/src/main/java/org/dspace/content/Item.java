@@ -2246,5 +2246,21 @@ public class Item extends DSpaceObject
 			this.addMetadatum(md);
 		}
 	}
+
+	public TableRowIterator getReplacedByChain() throws SQLException{
+	    String handle = this.getHandle();
+	    TableRowIterator rows = DatabaseManager.query(ourContext, "with recursive handle_replaced as (\n" +
+                "   select concat('http://hdl.handle.net/', handle) as handle, array[text_value] as replaced_by from metadatavalue natural join metadatafieldregistry natural join handle \n" +
+                "     where element = 'relation' and qualifier='isreplacedby'\n" +
+                "), rq as( \n" +
+                "   select * from handle_replaced \n" +
+                "   union all \n" +
+                "   select f.handle, f.replaced_by || s.replaced_by from handle_replaced as f join rq as s on f.replaced_by[array_length(f.replaced_by,1)] = s.handle \n" +
+                " ) select handle, replaced_by from rq \n" +
+                "   where (handle, array_length(replaced_by,1)) in (\n" +
+                "         select handle, max(array_length(replaced_by, 1)) as length from rq group by handle\n" +
+                ") and handle like ?;", "%" + handle);
+	    return rows;
+    }
 }
 
