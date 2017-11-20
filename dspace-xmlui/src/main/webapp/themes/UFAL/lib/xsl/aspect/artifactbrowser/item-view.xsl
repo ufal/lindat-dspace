@@ -744,11 +744,16 @@
                              </span>
                     </div>
                     </xsl:if>
-                        <span style="display: table-cell">
-                            <a href="#">
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button"
+                                    id="view-versions" data-toggle="dropdown">
+                                <xsl:attribute name="data-handle">
+                                    <xsl:value-of select="substring-after(/mets:METS/@ID,'hdl:')" />
+                                </xsl:attribute>
                                 <i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text>
-                            </a>
-                        </span>
+                                <span class="caret">&#160;</span>
+                            </button>
+                        </div>
                     </div>
                 </xsl:if>
                     <dl class="dl-horizontal">
