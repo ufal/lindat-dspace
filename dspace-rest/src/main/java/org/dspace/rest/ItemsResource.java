@@ -1078,8 +1078,8 @@ public class ItemsResource extends Resource
             context = createContext(headers);
             org.dspace.content.Item item = findItem(context, itemId, org.dspace.core.Constants
                     .READ);
-            List<org.dspace.content.Item> dspaceItems = item.getRelationChain("replaces");
-            dspaceItems.addAll(item.getRelationChain ("isreplacedby"));
+            List<org.dspace.content.Item> dspaceItems = item.getRelationChain("isreplacedby");
+            dspaceItems.addAll(item.getRelationChain ("replaces"));
             for (org.dspace.content.Item dspaceItem : dspaceItems){
                 items.add(new Item(dspaceItem, expand, context));
             }
