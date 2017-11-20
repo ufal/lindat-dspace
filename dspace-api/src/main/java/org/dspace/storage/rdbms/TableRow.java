@@ -589,6 +589,17 @@ public class TableRow
         }
     }
 
+    public void setColumn(String column, String[] array)
+    {
+        String canonicalized = canonicalizeAndCheck(column);
+        Object value = (array == null) ? NULL_OBJECT : array;
+        if (!value.equals(data.get(canonicalized)))
+        {
+            data.put(canonicalized, value);
+            changed.put(canonicalized, Boolean.TRUE);
+        }
+    }
+
     ////////////////////////////////////////
     // Utility methods
     ////////////////////////////////////////

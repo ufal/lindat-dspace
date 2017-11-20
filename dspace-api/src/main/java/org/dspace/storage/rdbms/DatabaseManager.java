@@ -1074,6 +1074,15 @@ public class DatabaseManager
                     row.setColumn(name, results.getTimestamp(i));
                     break;
 
+                case Types.ARRAY:
+                    Array array = results.getArray(i);
+                    if(array.getBaseType() == Types.VARCHAR){
+                        row.setColumn(name, (String[])array.getArray());
+                        break;
+                    }
+                    throw new IllegalArgumentException("DatabaseManager does not support arrays " +
+                            "of " + array.getBaseTypeName());
+
                 default:
                     throw new IllegalArgumentException("Unsupported JDBC type: " + jdbctype);
             }
