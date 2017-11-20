@@ -744,14 +744,16 @@
                              </span>
                     </div>
                     </xsl:if>
-                        <div class="dropdown">
+                        <div id="view-versions" class="dropdown">
                             <button class="btn btn-default dropdown-toggle" type="button"
-                                    id="view-versions" data-toggle="dropdown">
+                                    data-toggle="dropdown">
                                 <xsl:attribute name="data-handle">
                                     <xsl:value-of select="substring-after(/mets:METS/@ID,'hdl:')" />
                                 </xsl:attribute>
                                 <i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text>
                                 <span class="caret">&#160;</span>
+                                <ul class="dropdown-menu">
+                                </ul>
                             </button>
                         </div>
                     </div>
