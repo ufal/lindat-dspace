@@ -321,6 +321,24 @@ public class TableRow
         return (String) value;
     }
 
+    public String[] getStringArrayColumn(String column){
+        String canonicalized = canonicalizeAndCheck(column);
+        if(isColumnNullCanonicalized(canonicalized)){
+            return null;
+        }
+
+        Object value = data.get(canonicalized);
+        if(value == null){
+            throw new IllegalArgumentException("Column " + column + " not present");
+        }
+
+        if (!(value instanceof String[])){
+            throw new IllegalArgumentException("Value is not a string array");
+        }
+
+        return (String[]) value;
+    }
+
     /**
      * Return the boolean value of column.
      * 

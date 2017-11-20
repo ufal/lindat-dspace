@@ -1072,26 +1072,23 @@ public class ItemsResource extends Resource
             throws WebApplicationException{
 
         org.dspace.core.Context context = null;
-        List<Item> items = new ArrayList<>();
+        List<org.dspace.content.Item> items = new ArrayList<>();
 
         try {
             context = createContext(headers);
             org.dspace.content.Item item = findItem(context, itemId, org.dspace.core.Constants
                     .READ);
-            //List<org.dspace.content.Item> replaces = item.getReplacesChain();
-            TableRowIterator replacedBy = item.getReplacedByChain();
+            items.addAll(item.getRelationChain("replaces"));
+            items.addAll(item.getRelationChain("isreplacedby"));
             context.complete();
 
-        }catch (ContextException e){
-            processException("Could not fetch versions(id=" + itemId + "), ContextException." +
-                            " Message:" + e.getMessage(), context);
-        }catch (SQLException e){
-            processException("Could not fetch versions(id=" + itemId + "), SQLException." +
+        }catch (SQLException | ContextException e){
+            processException("Could not fetch versions(id=" + itemId + "), " + e.getClass().getName() +"." +
                     " Message:" + e.getMessage(), context);
         }finally {
             processFinally(context);
         }
-        return items.toArray(new Item[0]);
+        return items.toArray(new Item[items.size()]);
     }
 
     /**

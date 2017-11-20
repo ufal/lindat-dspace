@@ -37,6 +37,8 @@ import org.dspace.eperson.Group;
 import org.dspace.event.Event;
 import org.dspace.handle.HandleManager;
 import org.dspace.identifier.IdentifierException;
+import org.dspace.identifier.IdentifierNotFoundException;
+import org.dspace.identifier.IdentifierNotResolvableException;
 import org.dspace.identifier.IdentifierService;
 import org.dspace.storage.rdbms.DatabaseManager;
 import org.dspace.storage.rdbms.TableRow;
@@ -2247,20 +2249,42 @@ public class Item extends DSpaceObject
 		}
 	}
 
-	public TableRowIterator getReplacedByChain() throws SQLException{
+	public List<Item> getRelationChain(String relation) throws SQLException {
 	    String handle = this.getHandle();
-	    TableRowIterator rows = DatabaseManager.query(ourContext, "with recursive handle_replaced as (\n" +
-                "   select concat('http://hdl.handle.net/', handle) as handle, array[text_value] as replaced_by from metadatavalue natural join metadatafieldregistry natural join handle \n" +
-                "     where element = 'relation' and qualifier='isreplacedby'\n" +
+	    // iteratively join relation.<relation> (eg. isreplacedby) constructing an array of such
+        // metadata values. Select those rows having the longest array for that handle.
+        // TODO items with repeated "replacedby" might produce multiple chains of different
+        // lengths in that case we'd need to modify this. Might use array_agg if the minimal
+        // postgres version is >=9.5
+	    TableRowIterator rows = DatabaseManager.query(ourContext,
+                "with recursive handle_with_relation as (\n" +
+                        "select concat('http://hdl.handle.net/', handle) as handle, array[text_value] " +
+                        "as relation from metadatavalue natural join metadatafieldregistry natural join " +
+                        "handle where element = 'relation' and qualifier=?\n" +
                 "), rq as( \n" +
-                "   select * from handle_replaced \n" +
+                "   select * from handle_with_relation \n" +
                 "   union all \n" +
-                "   select f.handle, f.replaced_by || s.replaced_by from handle_replaced as f join rq as s on f.replaced_by[array_length(f.replaced_by,1)] = s.handle \n" +
-                " ) select handle, replaced_by from rq \n" +
-                "   where (handle, array_length(replaced_by,1)) in (\n" +
-                "         select handle, max(array_length(replaced_by, 1)) as length from rq group by handle\n" +
-                ") and handle like ?;", "%" + handle);
-	    return rows;
+                "   select f.handle, f.relation || s.relation from handle_with_relation as f join" +
+                " rq as s on f.relation[array_length(f.relation,1)] = s.handle \n" +
+                " ) select handle, relation from rq \n" +
+                "   where (handle, array_length(relation,1)) in (\n" +
+                "         select handle, max(array_length(relation, 1)) as length from rq group " +
+                "by handle\n" +
+                ") and handle like ?;", relation, "%" + handle);
+	    List<Item> items = new ArrayList<>();
+        IdentifierService identifierService = new DSpace().getSingletonService(IdentifierService.class);
+	    while(rows.hasNext()){
+	        TableRow row = rows.next(ourContext);
+	        for(String handlesRelation : row.getStringArrayColumn("relation")){
+	            try {
+                    items.add((Item) identifierService.resolve(ourContext, handlesRelation));
+                }catch (IdentifierNotFoundException | IdentifierNotResolvableException e){
+	                log.error(e.getMessage());
+	                return new ArrayList<>();
+                }
+            }
+        }
+        return items;
     }
 }
 
