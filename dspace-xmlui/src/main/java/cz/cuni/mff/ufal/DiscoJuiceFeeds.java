@@ -8,6 +8,7 @@ import java.net.URLConnection;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -51,15 +52,11 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
     private static String feedsContent;
     private static ReadWriteLock lock = new ReentrantReadWriteLock();
     private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    private static ScheduledFuture<?> future;
+    private static boolean aggressiveDelay = true;
 
     static{
-        executor.scheduleWithFixedDelay(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                DiscoJuiceFeeds.update();
-                                            }
-                                        }, 0,
-                ConfigurationManager.getLongProperty("discojuice", "refresh"), TimeUnit.HOURS);
+        future = executor.scheduleWithFixedDelay(new Updater(), 30, 60, TimeUnit.SECONDS);
     }
 
     private static final LookupService locationService;
@@ -97,7 +94,19 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
         log.info("DiscoJuiceFeeds::update called");
         lock.writeLock().lock();
         try{
-           feedsContent = createFeedsContent();
+            String newFeedsContent = createFeedsContent();
+            if(isNotBlank(newFeedsContent)) {
+                feedsContent = newFeedsContent;
+            }
+            if(aggressiveDelay && isNotBlank(feedsContent)){
+                // apply the configured refresh rate, when we've successfully obtained feeds
+                future.cancel(true);
+                future = executor.scheduleWithFixedDelay(new Updater(), 0,
+                        ConfigurationManager.getLongProperty("discojuice", "refresh"),
+                        TimeUnit.HOURS);
+                aggressiveDelay = false;
+            }
+
         }finally {
             lock.writeLock().unlock();
         }
@@ -122,7 +131,7 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
             Element root = doc.createElement("ignore_root");
             lock.readLock().lock();
             try {
-                if (feedsContent == null || feedsContent.isEmpty()) {
+                if (isBlank(feedsContent)) {
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to obtain feeds.");
                 } else {
                     boolean jsonp = isNotBlank(callback);
@@ -262,10 +271,14 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
                 log.info(String.format("For %s changed country from %s to %s", shibEntity.get("entityID"), old_country, new_country));
             }
         }
-        JSONArray ret = new JSONArray();
-        ret.addAll(shibDiscoEntities.values());
 
-        return ret.toJSONString();
+        if(shibDiscoEntities.isEmpty()){
+            return null;
+        }else {
+            JSONArray ret = new JSONArray();
+            ret.addAll(shibDiscoEntities.values());
+            return ret.toJSONString();
+        }
     }
 
     private static JSONArray downloadJSON(String url){
@@ -327,4 +340,10 @@ public class DiscoJuiceFeeds extends AbstractGenerator {
         //System.out.println(feeds);
     }
 
+    private static class Updater implements Runnable {
+        @Override
+        public void run() {
+            DiscoJuiceFeeds.update();
+        }
+    }
 }
