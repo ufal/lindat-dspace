@@ -23,9 +23,10 @@
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:confman="org.dspace.core.ConfigurationManager"
+    xmlns:psu="cz.cuni.mff.ufal.utils.PageStructureUtil"
     xmlns:file="java.io.File"
     xmlns="http://www.w3.org/1999/xhtml"
-    exclude-result-prefixes="i18n dri mets xlink xsl dim xhtml mods confman file">
+    exclude-result-prefixes="i18n dri mets xlink xsl dim xhtml mods confman file psu">
 
     <xsl:output indent="yes" />
 
@@ -404,7 +405,7 @@
             
                             <xsl:when test="normalize-space($static-page-name) != ''">
                                 <div>
-                                    <xsl:copy-of select="document(concat('../../html/', $static-page-name, '.html'))" />
+                                    <xsl:copy-of select="psu:documentReadAndInterpolate(concat($theme-path-on-disk, '/lib/html/', $static-page-name, '.html'))" />
                                 </div>
                             </xsl:when>
             
