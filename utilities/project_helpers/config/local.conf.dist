@@ -408,4 +408,10 @@ social.userconnection.encrypt.password=1234567890abcdef
 #salt must be hex encdoded string with length >= 8 bytes
 social.userconnection.encrypt.salt=1234abcd
 
+### TOS Page
+lr.description.institution = Institute of Formal and Applied Linguistics
+lr.description.location = Malostranské náměstí 25, 118 00 Praha, Czech Republic
+lr.description.country = Czech Republic
+lr.description.city = Prague
+
 lr.compile.time=
