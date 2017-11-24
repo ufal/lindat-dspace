@@ -556,11 +556,11 @@ public final class DSpaceConfigurationService implements ConfigurationService {
 
     protected Properties readPropertyFile(String filePathName) {
         Properties props = new Properties();
-        InputStream is = null;
+        Reader is = null;
         try {
             File f = new File(filePathName);
             if (f.exists()) {
-                is = new FileInputStream(f);
+                is = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
                 props.load(is);
                 log.info("Loaded "+props.size()+" config properties from file: " + f);
             }
@@ -588,7 +588,8 @@ public final class DSpaceConfigurationService implements ConfigurationService {
         try {
             ClassPathResource resource = new ClassPathResource(resourcePathName);
             if (resource.exists()) {
-                props.load(resource.getInputStream());
+                Reader is = new BufferedReader(new InputStreamReader(resource.getInputStream(), "UTF-8"));
+                props.load(is);
                 log.info("Loaded "+props.size()+" config properties from resource: " + resource);
             }
         } catch (Exception e) {
@@ -601,7 +602,7 @@ public final class DSpaceConfigurationService implements ConfigurationService {
         Properties props = new Properties();
         try{
             if(propertyFile.exists()){
-                props.load(new FileInputStream(propertyFile));
+                props.load(new BufferedReader(new InputStreamReader(new FileInputStream(propertyFile), "UTF-8")));
                 log.info("Loaded"+props.size() + " config properties from file: " + propertyFile.getName());
             }
 
@@ -614,7 +615,7 @@ public final class DSpaceConfigurationService implements ConfigurationService {
     protected Properties readPropertyStream(InputStream propertyStream){
         Properties props = new Properties();
         try{
-            props.load(propertyStream);
+            props.load(new BufferedReader(new InputStreamReader(propertyStream, "UTF-8")));
             log.info("Loaded"+props.size() + " config properties from stream");
         } catch (Exception e){
             log.warn("Failed to load config properties from stream: " + e.getMessage(), e);
