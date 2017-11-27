@@ -248,9 +248,11 @@ public class InstallItem
                 try {
                     DSpaceApi.authorizeBitstream(context, b);
                 }catch (AuthorizeException e){
+                    c.turnOffAuthorisationSystem();
                     //Anonymous user not allowed by license - don't generate preview
                     b.clearMetadata(ProcessBitstreams.schema, ProcessBitstreams.element, ProcessBitstreams.qualifier, Item.ANY);
                     b.update();
+                    c.restoreAuthSystemState();
                 }
             }
         }
