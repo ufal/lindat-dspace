@@ -9,11 +9,8 @@ package org.dspace.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
+import java.util.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -37,8 +34,12 @@ import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeManager;
 import org.dspace.content.*;
+import org.dspace.content.Collection;
 import org.dspace.content.service.ItemService;
 import org.dspace.eperson.Group;
+import org.dspace.identifier.IdentifierNotFoundException;
+import org.dspace.identifier.IdentifierNotResolvableException;
+import org.dspace.identifier.IdentifierService;
 import org.dspace.rest.common.Bitstream;
 import org.dspace.rest.common.Item;
 import org.dspace.rest.common.MetadataEntry;
@@ -46,6 +47,7 @@ import org.dspace.rest.exceptions.ContextException;
 import org.dspace.storage.rdbms.TableRow;
 import org.dspace.storage.rdbms.TableRowIterator;
 import org.dspace.usage.UsageEvent;
+import org.dspace.utils.DSpace;
 
 /**
  * Class which provide all CRUD methods over items.
@@ -1078,10 +1080,21 @@ public class ItemsResource extends Resource
             context = createContext(headers);
             org.dspace.content.Item item = findItem(context, itemId, org.dspace.core.Constants
                     .READ);
-            List<org.dspace.content.Item> dspaceItems = item.getRelationChain("isreplacedby");
-            dspaceItems.addAll(item.getRelationChain ("replaces"));
-            for (org.dspace.content.Item dspaceItem : dspaceItems){
-                items.add(new Item(dspaceItem, expand, context));
+            List<String> relations = item.getRelationChain("isreplacedby");
+            Collections.reverse(relations);
+            relations.addAll(item.getRelationChain ("replaces"));
+
+
+            IdentifierService identifierService = new DSpace().getSingletonService(IdentifierService.class);
+            for(String handleRelation : relations){
+                try {
+                    items.add(new Item((org.dspace.content.Item)identifierService.resolve(context, handleRelation), expand, context));
+                }catch (IdentifierNotFoundException | IdentifierNotResolvableException e){
+                    Item fakeItem = new Item();
+                    fakeItem.setHandle(handleRelation);
+                    fakeItem.setName(handleRelation);
+                    items.add(fakeItem);
+                }
             }
             context.complete();
         }catch (SQLException | ContextException e){

@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.authorize.AuthorizeConfiguration;
@@ -37,8 +36,6 @@ import org.dspace.eperson.Group;
 import org.dspace.event.Event;
 import org.dspace.handle.HandleManager;
 import org.dspace.identifier.IdentifierException;
-import org.dspace.identifier.IdentifierNotFoundException;
-import org.dspace.identifier.IdentifierNotResolvableException;
 import org.dspace.identifier.IdentifierService;
 import org.dspace.storage.rdbms.DatabaseManager;
 import org.dspace.storage.rdbms.TableRow;
@@ -2249,7 +2246,13 @@ public class Item extends DSpaceObject
 		}
 	}
 
-	public List<Item> getRelationChain(String relation) throws SQLException {
+    /**
+     *
+     * @param relation - name of relation e.g. isreplacedby or replaces
+     * @return A list of handles that are in relation to this item
+     * @throws SQLException
+     */
+	public List<String> getRelationChain(String relation) throws SQLException {
 	    String handle = this.getHandle();
 	    // iteratively join relation.<relation> (eg. isreplacedby) constructing an array of such
         // metadata values. Select those rows having the longest array for that handle.
@@ -2271,20 +2274,14 @@ public class Item extends DSpaceObject
                 "         select handle, max(array_length(relation, 1)) as length from rq group " +
                 "by handle\n" +
                 ") and handle like ?;", relation, "%" + handle);
-	    List<Item> items = new ArrayList<>();
-        IdentifierService identifierService = new DSpace().getSingletonService(IdentifierService.class);
+	    List<String> handles = new ArrayList<>();
 	    while(rows.hasNext()){
 	        TableRow row = rows.next(ourContext);
-	        for(String handlesRelation : row.getStringArrayColumn("relation")){
-	            try {
-                    items.add((Item) identifierService.resolve(ourContext, handlesRelation));
-                }catch (IdentifierNotFoundException | IdentifierNotResolvableException e){
-	                log.error(e.getMessage());
-	                return new ArrayList<>();
-                }
+	        for(String handleRelation : row.getStringArrayColumn("relation")){
+	            handles.add(handleRelation);
             }
         }
-        return items;
+        return handles;
     }
 }
 
