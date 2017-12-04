@@ -1087,13 +1087,19 @@ public class ItemsResource extends Resource
 
             IdentifierService identifierService = new DSpace().getSingletonService(IdentifierService.class);
             for(String handleRelation : relations){
+                org.dspace.content.Item resolvedItem;
                 try {
-                    items.add(new Item((org.dspace.content.Item)identifierService.resolve(context, handleRelation), expand, context));
+                    resolvedItem = (org.dspace.content.Item)identifierService.resolve(context, handleRelation);
                 }catch (IdentifierNotFoundException | IdentifierNotResolvableException e){
+                    resolvedItem = null;
+                }
+                if(resolvedItem == null) {
                     Item fakeItem = new Item();
                     fakeItem.setHandle(handleRelation);
                     fakeItem.setName(handleRelation);
                     items.add(fakeItem);
+                }else {
+                    items.add(new Item(resolvedItem, expand, context));
                 }
             }
             context.complete();
