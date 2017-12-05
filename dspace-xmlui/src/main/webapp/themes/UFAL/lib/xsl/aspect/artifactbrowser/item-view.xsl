@@ -750,7 +750,8 @@
                                 <xsl:attribute name="data-handle">
                                     <xsl:value-of select="substring-after(/mets:METS/@ID,'hdl:')" />
                                 </xsl:attribute>
-                                <i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text>
+                                <img style="display:none;" src="{$theme-path}/images/loading.gif" width="16px" height="16px" />
+                                <span><i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text></span>
                                 <span class="caret">&#160;</span>
                                 <ul class="dropdown-menu">
                                 </ul>
