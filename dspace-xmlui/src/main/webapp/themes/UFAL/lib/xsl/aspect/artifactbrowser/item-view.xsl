@@ -715,14 +715,15 @@
                 <!-- other versions -->
                 <xsl:if
                         test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1 or count(dim:field[@element='relation' and @qualifier='replaces' and @mdschema='dc']) &gt;= 1">
-                    <div class="alert" id="versions">
-                        <span style="dispaly: table-cell">
-                            <i class="fa fa-info-circle fa-3x pull-left">&#160;</i>
-                        </span>
+                    <div class="alert container" id="versions">
+                        <div class="row">
+                                <div class="col-sm-1">
+                                    <i class="fa fa-info-circle fa-3x">&#160;</i>
+                                </div>
                     <!-- replacedby info -->
                     <xsl:if test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1">
-                    <div id="replaced_by_alert">
-                            <span style="display: table-cell">
+                    <div id="replaced_by_alert" class="col-sm-11">
+                            <span>
                                  <xsl:choose>
                                      <xsl:when test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) = 1">
                                              <i18n:text>xmlui.UFAL.artifactbrowser.item_view.replaced_one</i18n:text><br/>
@@ -744,18 +745,25 @@
                              </span>
                     </div>
                     </xsl:if>
-                        <div id="view-versions" class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button"
-                                    data-toggle="dropdown">
-                                <xsl:attribute name="data-handle">
-                                    <xsl:value-of select="substring-after(/mets:METS/@ID,'hdl:')" />
-                                </xsl:attribute>
-                                <img style="display:none;" src="{$theme-path}/images/loading.gif" width="16px" height="16px" />
-                                <span><i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text></span>
-                                <span class="caret">&#160;</span>
-                                <ul class="dropdown-menu">
-                                </ul>
-                            </button>
+                        </div>
+                        <div id="view-versions" class="dropdown row">
+                            <div class="col-sm-1">
+                                <button class="btn btn-default dropdown-toggle" type="button"
+                                        data-toggle="dropdown">
+                                    <xsl:attribute name="data-handle">
+                                        <xsl:value-of select="substring-after(/mets:METS/@ID,'hdl:')" />
+                                    </xsl:attribute>
+                                    <img style="display:none;" src="{$theme-path}/images/loading.gif" width="16px" height="16px" />
+                                    <span><i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text></span>
+                                    <span class="caret">&#160;</span>
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            <ul class="dropdown-menu">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </xsl:if>
