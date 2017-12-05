@@ -755,7 +755,7 @@
                         <dl id="item-versions" class="dl-horizontal">
                         <dt style="text-align: left">
                             <i class="fa fa-code-fork">&#160;</i>
-                            <i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text>
+                            <i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions_dt</i18n:text>
                         </dt>
                         <dd>
                             <xsl:call-template name="versions-dropdown" />
@@ -1322,7 +1322,7 @@
                        <xsl:value-of select="substring-after(/mets:METS/@ID,'hdl:')" />
                    </xsl:attribute>
                    <img style="display:none;" src="{$theme-path}/images/loading.gif" width="16px" height="16px" />
-                   <span><i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text></span>
+                   <span><i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions_dropdown</i18n:text></span>
                    <span class="caret">&#160;</span>
                    <div class="row">
                        <div class="col-sm-1">
