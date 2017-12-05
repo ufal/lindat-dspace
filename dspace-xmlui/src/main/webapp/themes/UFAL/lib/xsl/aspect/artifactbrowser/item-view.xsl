@@ -713,42 +713,56 @@
 			<xsl:when test="$clause = 17 and $ds_item_view_toggle_url != ''">
 
                 <!-- other versions -->
-                <xsl:if
-                        test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1 or count(dim:field[@element='relation' and @qualifier='replaces' and @mdschema='dc']) &gt;= 1">
-                    <div class="alert container" id="versions">
-                        <div class="row">
-                            <div class="col-sm-1">
-                                <i class="fa fa-info-circle fa-3x">&#160;</i>
-                            </div>
-                            <!-- replacedby info -->
-                            <xsl:if test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1">
-                                <div id="replaced_by_alert" class="col-sm-11">
-                                   <span>
-                                        <xsl:choose>
-                                            <xsl:when test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) = 1">
-                                                    <i18n:text>xmlui.UFAL.artifactbrowser.item_view.replaced_one</i18n:text><br/>
-                                            </xsl:when>
-                                            <xsl:otherwise>
-                                                    <i18n:text>xmlui.UFAL.artifactbrowser.item_view.replaced_many</i18n:text><br/>
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                        <xsl:for-each select="dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']">
-                                            <div>
-                                                <a>
-                                                    <xsl:attribute name="href">
-                                                            <xsl:value-of select="." />
-                                                    </xsl:attribute>
-                                                    <xsl:value-of select="." />
-                                                </a>
-                                            </div>
-                                        </xsl:for-each>
-                                   </span>
+                <xsl:choose>
+                    <xsl:when
+                            test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1">
+                        <div class="alert container" id="versions">
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <i class="fa fa-info-circle fa-3x">&#160;</i>
                                 </div>
-                            </xsl:if>
+                                <!-- replacedby info -->
+                                <xsl:if test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) &gt;= 1">
+                                    <div id="replaced_by_alert" class="col-sm-11">
+                                       <span>
+                                            <xsl:choose>
+                                                <xsl:when test="count(dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']) = 1">
+                                                        <i18n:text>xmlui.UFAL.artifactbrowser.item_view.replaced_one</i18n:text><br/>
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                        <i18n:text>xmlui.UFAL.artifactbrowser.item_view.replaced_many</i18n:text><br/>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                            <xsl:for-each select="dim:field[@element='relation' and @qualifier='isreplacedby' and @mdschema='dc']">
+                                                <div>
+                                                    <a>
+                                                        <xsl:attribute name="href">
+                                                                <xsl:value-of select="." />
+                                                        </xsl:attribute>
+                                                        <xsl:value-of select="." />
+                                                    </a>
+                                                </div>
+                                            </xsl:for-each>
+                                       </span>
+                                    </div>
+                                </xsl:if>
+                            </div>
+                            <xsl:call-template name="versions-dropdown" />
                         </div>
-                        <xsl:call-template name="versions-dropdown" />
-                    </div>
-                </xsl:if>
+                    </xsl:when>
+                    <xsl:when
+                            test="count(dim:field[@element='relation' and @qualifier='replaces' and @mdschema='dc']) &gt;= 1">
+                        <dl id="item-versions" class="dl-horizontal">
+                        <dt style="text-align: left">
+                            <i class="fa fa-code-fork">&#160;</i>
+                            <i18n:text>xmlui.UFAL.artifactbrowser.item_view.versions</i18n:text>
+                        </dt>
+                        <dd>
+                            <xsl:call-template name="versions-dropdown" />
+                        </dd>
+                        </dl>
+                    </xsl:when>
+                </xsl:choose>
 
 
                     <dl class="dl-horizontal">
@@ -763,7 +777,7 @@
                         </dd>
                     </dl>
 
-			</xsl:when>
+            </xsl:when>
 
 			<!-- recurse without changing phase if we didn't output anything -->
 			<xsl:otherwise>
