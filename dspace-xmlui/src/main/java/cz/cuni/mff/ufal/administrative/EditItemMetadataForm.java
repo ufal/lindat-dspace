@@ -159,9 +159,8 @@ public class EditItemMetadataForm extends AbstractDSpaceTransformer {
         List addForm = main.addList("addItemMetadata",List.TYPE_FORM);
         addForm.setHead(T_head1);
 
-                Select addName = addForm.addItem().addSelect("field", "autocomplete");
+                Select addName = addForm.addItem().addSelect("field", "select2");
                 addName.setLabel(T_name_label);
-                main.addHidden("field-type").setValue("select2");
                 MetadataField[] fields = MetadataField.findAll(context);
                 for (MetadataField field : fields)
                 {

@@ -73,6 +73,7 @@ public class EditBitstreamForm extends AbstractDSpaceTransformer
 		pageMeta.addTrail().addContent(T_trail);
         pageMeta.addMetadata("javascript", "static").addContent("static/js/editItemUtil.js");
 		pageMeta.addMetadata("include-library", "datepicker");
+		pageMeta.addMetadata("include-library", "select2");
 	}
 
 	public void addBody(Body body) throws SAXException, WingException,
@@ -197,9 +198,8 @@ public class EditBitstreamForm extends AbstractDSpaceTransformer
 		List addForm = div.addList("addBitstreamMetadata",List.TYPE_FORM);
 		addForm.setHead(T_head1);
 
-		Select addName = addForm.addItem().addSelect("field", "autocomplete");
+		Select addName = addForm.addItem().addSelect("field", "select2");
 		addName.setLabel(T_name_label);
-		div.addHidden("field-type").setValue("select2");
 		MetadataField[] fields = MetadataField.findAll(context);
 		for (MetadataField field : fields)
 		{
