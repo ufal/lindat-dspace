@@ -421,6 +421,31 @@ ufal.submissions = {
 
                     jQuery(this).attr('autocomplete', 'off');
                 });
+    },
+
+    convert_language_iso_codes: function () {
+        var isoFieldsSelectors = '[name="dc_language_iso_selected"] + .ds-interpreted-field, '; //submission
+        var numItems = jQuery(isoFieldsSelectors).length;
+        if (numItems > 0) {
+            var url = ufal.utils.get_dspace_url()
+                + 'static/json/iso_langs.json';
+            var isoCodesMap = ufal.utils.swap_map(ufal.utils.ajax_json(url));
+            jQuery(isoFieldsSelectors).each(function (i) {
+                var value = jQuery(this).html();
+                var groups = value.match(/^(\s*)(\w{3})(.*)$/);
+                if (groups) {
+                    var isoCode = groups[2];
+                    if (isoCode in isoCodesMap) {
+                        value = groups[1] + isoCodesMap[isoCode] + groups[3];
+                    }
+                }
+                jQuery(this).html(value);
+            });
+        }
+    },
+
+    convert_codes: function () {
+        ufal.submissions.convert_language_iso_codes();
     }
 
 };
@@ -430,4 +455,109 @@ jQuery(document).ready(function () {
     ufal.submissions.fix_l10n();
     ufal.submissions.handle_submission_js();
     ufal.submissions.autocomplete();
+    ufal.submissions.convert_codes();
+
+    if (jQuery("#aspect_submission_StepTransformer_field_license").length) {
+        jQuery("#aspect_submission_StepTransformer_field_license").select2({
+            placeholder: {id: "", text: jQuery("#aspect_submission_StepTransformer_field_license option:selected").text()},
+            allowClear: true,
+            formatResult: function (license) {
+                var id = license.id;
+                if (id == "") return "<div class='bold' style='padding: 5px;'>" + license.text + "</div>";
+                var a = $("#aspect_submission_StepTransformer_list_license-list li a[name='license_" + id + "']");
+                var label = a.attr("license-label");
+                var label_text = a.attr("license-label-text");
+                return "<div class='bold' style='padding: 5px;'><span class='label label-" + label + "'>" + label + "</span> " + license.text + "</div>";
+            },
+            formatSelection: function (license) {
+                var id = license.id;
+                if (id == "") return "<div class='bold' style='padding: 5px;'>" + license.text + "</div>";
+                var a = $("#aspect_submission_StepTransformer_list_license-list li a[name='license_" + id + "']");
+                var label = a.attr("license-label");
+                var label_text = a.attr("license-label-text");
+                return "<div class='bold' style='font-size: 120%; padding: 5px;'><span class='label label-" + label + "'>" + label + "</span> " + license.text + "</div>";
+            }
+        });
+    }
+
+    if (jQuery(".licenseselector").length) {
+
+        jQuery("#aspect_submission_StepTransformer_field_license").change(function () {
+            jQuery("#aspect_submission_StepTransformer_item_license-not-supported-message").addClass("hidden");
+        });
+
+        jQuery(".licenseselector").licenseSelector(
+            {
+                licenses: {
+                    'pcedt2': {
+                        name: 'CC-BY-NC-SA + LDC99T42',
+                        available: true,
+                        url: 'https://lindat.mff.cuni.cz/repository/xmlui/page/license-pcedt2',
+                        description: 'License Agreement for Prague Czech English Dependency Treebank 2.0',
+                        categories: ['data', 'by', 'nc', 'sa'],
+                    },
+                    'cnc': {
+                        name: 'Czech National Corpus (Shuffled Corpus Data)',
+                        available: true,
+                        url: 'https://lindat.mff.cuni.cz/repository/xmlui/page/license-cnc',
+                        description: 'License Agreement for the CNC',
+                        categories: ['data'],
+                    },
+                    'hamledt': {
+                        name: 'HamleDT 1.0 Licence Agreement',
+                        available: true,
+                        url: 'https://lindat.mff.cuni.cz/repository/xmlui/page/licence-hamledt',
+                        description: 'License Agreement for the HamleDT 1.0',
+                        categories: ['data'],
+                    },
+                    'hamledt-2.0': {
+                        name: 'HamleDT 2.0 Licence Agreement',
+                        available: true,
+                        url: 'https://lindat.mff.cuni.cz/repository/xmlui/page/licence-hamledt-2.0',
+                        description: 'HamleDT 2.0 License Agreement',
+                        categories: ['data'],
+                    },
+                    'pdt2': {
+                        name: 'PDT 2.0 License',
+                        available: true,
+                        url: 'https://lindat.mff.cuni.cz/repository/xmlui/page/license-pdt2',
+                        description: 'Prague Dependency Treebank, version 2.0 License Agreement',
+                        categories: ['data'],
+                    },
+                    'pdtsl': {
+                        name: 'PDTSL',
+                        available: true,
+                        url: 'https://lindat.mff.cuni.cz/repository/xmlui/page/licence-pdtsl',
+                        description: 'Research-Usage License Agreement for the PDTSL',
+                        categories: ['data'],
+                    },
+                    'apache-2': {
+                        url: 'http://www.apache.org/licenses/LICENSE-2.0',
+                    },
+                    'perl-artistic-2': {
+                        url: 'http://opensource.org/licenses/Artistic-2.0',
+                    },
+                    'test-1': {
+                        url: 'http://www.google.com',
+                    }
+                },
+                onLicenseSelected: function (license) {
+                    var selectedLic = license["url"];
+                    var allLic = jQuery("#aspect_submission_StepTransformer_list_license-list li a");
+                    for (var i = 0; i < allLic.length; i++) {
+                        if (allLic[i].href == selectedLic) {
+                            var id = allLic[i].name.replace("license_", "");
+                            $("#aspect_submission_StepTransformer_field_license").select2("val", id);
+                            jQuery('html, body').animate({
+                                scrollTop: $("#aspect_submission_StepTransformer_list_submit-ufal-license").offset().top
+                            }, 10);
+                            jQuery("#aspect_submission_StepTransformer_item_license-not-supported-message").addClass("hidden");
+                            return;
+                        }
+                    }
+                    jQuery("#aspect_submission_StepTransformer_item_license-not-supported-message").removeClass("hidden");
+                }
+            }
+        );
+    }
 }); // ready
