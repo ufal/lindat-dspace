@@ -1082,6 +1082,7 @@ public class ItemsResource extends Resource
                     .READ);
             List<String> relations = item.getRelationChain("isreplacedby");
             Collections.reverse(relations);
+            relations.add(item.getHandle());
             relations.addAll(item.getRelationChain ("replaces"));
 
 
