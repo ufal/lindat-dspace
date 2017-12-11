@@ -85,7 +85,11 @@ Common usage:
     </loadproperties>
 
     <!-- Load the configuration -->
-    <property file="${config}" />
+    <loadproperties encoding="UTF-8" srcFile="${config}">
+        <filterchain>
+            <escapeunicode/>
+        </filterchain>
+    </loadproperties>
 
     <!-- Timestamp date used when creating backup directories -->
     <tstamp>
