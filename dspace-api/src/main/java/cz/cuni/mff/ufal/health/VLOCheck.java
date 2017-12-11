@@ -9,6 +9,7 @@
  */
 package cz.cuni.mff.ufal.health;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -45,7 +46,8 @@ public class VLOCheck extends Check {
                 return "PLEASE configure lr.harvester.info.url";
             }
             String dspace_name = ConfigurationManager.getProperty("dspace.name");
-            dspace_name = dspace_name.replaceAll("[ ,/-]+","_");
+            dspace_name = dspace_name.replaceAll("[() ,/-]+","_");
+            dspace_name = StringUtils.stripAccents(dspace_name);
             harvesterInfoUrl = harvesterInfoUrl.endsWith("/") ? harvesterInfoUrl + dspace_name :
                     harvesterInfoUrl + "/" + dspace_name;
             harvesterInfoUrl = harvesterInfoUrl + ".html";
