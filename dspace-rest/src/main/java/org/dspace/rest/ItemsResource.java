@@ -1097,14 +1097,14 @@ public class ItemsResource extends Resource
             throws WebApplicationException{
 
         org.dspace.core.Context context = null;
-        List<Item> items = new ArrayList<>();
+        Item[] items = new Item[]{};
+        Map<Item,Date> item2date = new HashMap<>();
 
         try {
             context = createContext(headers);
             org.dspace.content.Item item = findItem(context, itemId, org.dspace.core.Constants
                     .READ);
-            List<String> relations = new LinkedList<>(item.getRelationChain("isreplacedby"));
-            Collections.reverse(relations);
+            java.util.Collection<String> relations = item.getRelationChain("isreplacedby");
             relations.add(item.getHandle());
             relations.addAll(item.getRelationChain ("replaces"));
 
@@ -1121,19 +1121,40 @@ public class ItemsResource extends Resource
                     Item fakeItem = new Item();
                     fakeItem.setHandle(handleRelation);
                     fakeItem.setName(handleRelation);
-                    items.add(fakeItem);
+                    item2date.put(fakeItem, DCDate.getCurrent().toDate());
                 }else {
-                    items.add(new Item(resolvedItem, expand, context));
+                    Date submitDate;
+                    Metadatum[] mds = resolvedItem.getMetadata("dc","date", "available",
+                            org.dspace.content.Item.ANY);
+                    if(mds != null && mds.length > 0){
+                        submitDate = new DCDate(mds[0].value).toDate();
+                    }else{
+                        submitDate = DCDate.getCurrent().toDate();
+                    }
+
+                    item2date.put(new Item(resolvedItem, expand, context), submitDate);
                 }
             }
             context.complete();
+            List<Map.Entry<Item,Date>> entries = new LinkedList<>(item2date.entrySet());
+            Collections.sort(entries, new Comparator<Map.Entry<Item, Date>>() {
+                @Override
+                public int compare(Map.Entry<Item, Date> o1, Map.Entry<Item, Date> o2) {
+                    return o2.getValue().compareTo(o1.getValue());
+                }
+            });
+            items = new Item[entries.size()];
+            int i = 0;
+            for(Map.Entry<Item, Date> entry : entries){
+               items[i++] = entry.getKey();
+            }
         }catch (SQLException | ContextException e){
             processException("Could not fetch versions(id=" + itemId + "), " + e.getClass().getName() +"." +
                     " Message:" + e.getMessage(), context);
         }finally {
             processFinally(context);
         }
-        return items.toArray(new Item[items.size()]);
+        return items;
     }
 
     /**
