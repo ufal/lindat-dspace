@@ -16,13 +16,13 @@ import java.sql.SQLException;
 import org.apache.commons.lang.time.DateUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.apache.log4j.Logger;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+
+import java.util.*;
+
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.handle.HandleManager;
 import org.dspace.workflow.WorkflowItem;
 import org.junit.*;
 import static org.junit.Assert.* ;
@@ -1854,6 +1854,98 @@ public class ItemTest  extends AbstractDSpaceObjectTest
         assertThat("testFindByAuthorityValue 3",result,notNullValue());
         assertTrue("testFindByAuthorityValue 4",result.hasNext());
         assertThat("testFindByAuthorityValue 5",result.next(),equalTo(it));
+    }
+
+    @Test
+    public void testGetRelationChainNotNull() throws SQLException, AuthorizeException
+    {
+        context.turnOffAuthorisationSystem();
+        String handle = "123/456";
+        HandleManager.createHandle(context, it, handle);
+        context.commit();
+        context.restoreAuthSystemState();
+        assertThat("testSetSubmitter 1", it.getRelationChain("replaces"), notNullValue());
+    }
+
+    @Test
+    public void testGetRelationChainReplacedByOne() throws SQLException, AuthorizeException
+    {
+        context.turnOffAuthorisationSystem();
+        String handle = "123/456";
+        HandleManager.createHandle(context, it, handle);
+
+        Item replacingItem = Item.create(context);
+        replacingItem.setArchived(true);
+        replacingItem.setSubmitter(context.getCurrentUser());
+        String replaces = "http://hdl.handle.net/" + handle;
+        replacingItem.addMetadata("dc", "relation", "replaces", null, replaces);
+        replacingItem.update();
+
+        handle = "123/457";
+        HandleManager.createHandle(context, replacingItem, handle);
+
+        String replacedBy = "http://hdl.handle.net/" + handle;
+        it.setReplacedBy(replacedBy);
+        it.update();
+
+        context.commit();
+        context.restoreAuthSystemState();
+        java.util.Collection<String> replacedByChain = it.getRelationChain("isreplacedby");
+        assertThat("Unexpected size for replacedby", replacedByChain.size(), equalTo(1));
+        assertTrue("Unexpected replacedby", replacedByChain.contains(replacedBy));
+        java.util.Collection<String> replacesChain = replacingItem.getRelationChain("replaces");
+        assertThat("Unexpected size for replaces", replacesChain.size(), equalTo(1));
+        assertTrue("Unexpected replaces", replacesChain.contains(replaces));
+    }
+
+    @Test
+    public void testGetRelationChainMany() throws SQLException, AuthorizeException
+    {
+        context.turnOffAuthorisationSystem();
+        String handle = "123/1";
+        HandleManager.createHandle(context, it, handle);
+
+        Item[] items = new Item[9];
+        items[1] = it;
+        for(int i = 2; i <= 8; i++){
+            Item replacingItem = Item.create(context);
+            replacingItem.setArchived(true);
+            replacingItem.setSubmitter(context.getCurrentUser());
+            handle = "123/" + i;
+            HandleManager.createHandle(context, replacingItem, handle);
+            items[i] = replacingItem;
+        }
+
+        for(int i : new int[]{2,3,4}){
+            items[1].setReplacedBy("http://hdl.handle.net/" + items[i].getHandle());
+            items[i].addMetadata("dc", "relation", "replaces", null, "http://hdl.handle.net/" + items[1].getHandle());
+        }
+
+        items[2].setReplacedBy("http://hdl.handle.net/" + items[5].getHandle());
+        items[5].addMetadata("dc", "relation", "replaces", null, "http://hdl.handle.net/" + items[2].getHandle());
+
+        items[4].setReplacedBy("http://hdl.handle.net/" + items[7].getHandle());
+        items[7].addMetadata("dc", "relation", "replaces", null, "http://hdl.handle.net/" + items[4].getHandle());
+
+        items[3].setReplacedBy("http://hdl.handle.net/" + items[6].getHandle());
+        items[6].addMetadata("dc", "relation", "replaces", null, "http://hdl.handle.net/" + items[3].getHandle());
+        items[6].setReplacedBy("http://hdl.handle.net/" + items[7].getHandle());
+        items[7].addMetadata("dc", "relation", "replaces", null, "http://hdl.handle.net/" + items[6].getHandle());
+        items[7].setReplacedBy("http://hdl.handle.net/" + items[8].getHandle());
+        items[8].addMetadata("dc", "relation", "replaces", null, "http://hdl.handle.net/" + items[7].getHandle());
+
+        for(int i = 1; i <= 8; i++){
+            items[i].update();
+        }
+
+        context.commit();
+        context.restoreAuthSystemState();
+        assertThat(it.getRelationChain("isreplacedby").size(), equalTo(7));
+        assertThat(items[4].getRelationChain("isreplacedby").size(), equalTo(2));
+        assertThat(items[8].getRelationChain("replaces").size(), equalTo(5));
+        assertThat(items[7].getRelationChain("replaces").size(), equalTo(4));
+        assertTrue(items[7].getRelationChain("replaces").containsAll(Arrays.asList("http://hdl.handle.net/123/1",
+                "http://hdl.handle.net/123/3", "http://hdl.handle.net/123/4", "http://hdl.handle.net/123/6")));
     }
 
 }

@@ -1065,6 +1065,29 @@ public class ItemsResource extends Resource
         return items.toArray(new Item[0]);
     }
 
+    /**
+     * Returns the "versions" of this item. It's obtained by following the "isreplacedby" and "replaces" relations.
+     * If you have the following graph (where numbers are individual versions),
+     *
+     *   2-5
+     *  /
+     * 1-3-6-7-8
+     *  \  /
+     *   4
+     *
+     * versions of 1 are all the nodes, versions of 4 are just 1; 4 and 7, versions of 8 are all the nodes except 2
+     * and 5.
+     *
+     * @param itemId
+     * @param expand
+     * @param user_ip
+     * @param user_agent
+     * @param xforwardedfor
+     * @param headers
+     * @param request
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/{item_id}/versions")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -1080,7 +1103,7 @@ public class ItemsResource extends Resource
             context = createContext(headers);
             org.dspace.content.Item item = findItem(context, itemId, org.dspace.core.Constants
                     .READ);
-            List<String> relations = item.getRelationChain("isreplacedby");
+            List<String> relations = new LinkedList<>(item.getRelationChain("isreplacedby"));
             Collections.reverse(relations);
             relations.add(item.getHandle());
             relations.addAll(item.getRelationChain ("replaces"));
