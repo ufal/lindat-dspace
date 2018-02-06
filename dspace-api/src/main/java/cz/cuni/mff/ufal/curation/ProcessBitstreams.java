@@ -104,12 +104,17 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
         }
 
         DSpaceObject subject = event.getSubject(ctx);
-        DSpaceObject object = event.getObject(ctx);
         int et = event.getEventType();
         Bitstream b = (Bitstream)subject;
 
         if (null != subject) {
-            if (Event.ADD == et || Event.CREATE == et) {
+            boolean original = false;
+            for(Bundle bundle : b.getBundles()){
+                if("ORIGINAL".equals(bundle.getName())){
+                    original = true;
+                }
+            }
+            if (original && (Event.ADD == et || Event.CREATE == et)) {
                 processBitstream(b);
             } else if (Event.DELETE == et || Event.REMOVE == et) {
                 // automatically removed
