@@ -190,11 +190,17 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
             if(is instanceof ArchiveInputStream) {
             	ArchiveInputStream ais = (ArchiveInputStream)is;
 	            ArchiveEntry entry;
+	            int i = 0;
 	            while ((entry = ais.getNextEntry()) != null) {
 	                String content = String.format(
 	                    "%s|%d", entry.getName(), entry.getSize()
 	                );
 	                b.addMetadata( schema, element, qualifier, Item.ANY, content );
+	                //don't add more than 1000 files
+	                if(++i >= 1000){
+	                    b.addMetadata(schema, element, qualifier, Item.ANY, "...");
+	                    break;
+                    }
 	            }
             } else {
             	InputStreamReader r = new InputStreamReader(is);
