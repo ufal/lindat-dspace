@@ -1,23 +1,20 @@
 /* Created for LINDAT/CLARIN */
 package cz.cuni.mff.ufal.curation;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import cz.cuni.mff.ufal.DSpaceApi;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.compressors.CompressorException;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.*;
@@ -28,7 +25,6 @@ import org.dspace.event.Event;
 import org.dspace.core.Context;
 import org.dspace.content.Bitstream;
 import org.dspace.core.Constants;
-import org.dspace.storage.bitstore.BitstreamStorageManager;
 
 
 public class ProcessBitstreams extends AbstractCurationTask implements Consumer {
@@ -133,22 +129,40 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
     }
 
     static InputStream getIS(String mime, InputStream is) {
-        if ( mime.equals("application/zip") ) {
-            return new ZipArchiveInputStream(is);
+
+	    is = new BufferedInputStream(is);
+	    InputStream ret = null;
+
+	    switch (mime){
+            case "application/x-gzip":
+            case "application/gzip":
+            case "application/x-xz":
+                try{
+                    CompressorInputStream cis = new CompressorStreamFactory().createCompressorInputStream(is);
+                    ret = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(cis));
+                }catch (CompressorException e){
+                    log.error("Failed to extract known mime-type " + mime);
+                    log.error(e);
+                }catch (ArchiveException e){
+                    log.debug("Not a compressed archive (eg. .tgz)");
+                }
+                break;
+            case "application/zip":
+            case "application/x-tar":
+                try{
+                    ret = new ArchiveStreamFactory().createArchiveInputStream(is);
+                }catch (ArchiveException e){
+                    log.error("Failed to extract known archive mime-type=" + mime);
+                    log.error(e);
+                }
+                break;
+            default: break;
         }
-        else if ( mime.equals("application/x-gzip") ) {
+
+        if (ret == null && mime.startsWith("text/plain") ) {
+        	ret = is;
         }
-        else if ( mime.equals("application/gzip") ) {
-        }
-        else if ( mime.equals("application/x-tar") ) {
-            return new TarArchiveInputStream(is);
-        }
-        else if ( mime.equals("application/x-xz") ) {
-        }
-        else if ( mime.startsWith("text/plain") ) {
-        	return is;
-        }
-        return null;
+        return ret;
     }
 
     static int addBitstreamContent(Bitstream b) throws SQLException, AuthorizeException {
