@@ -72,7 +72,8 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
 
 	boolean processItem(Item item) throws SQLException, AuthorizeException {
         int processed = 0;
-        for ( Bundle bundle : item.getBundles("ORIGINAL") ) {
+        // we filter for ORIGINAL later on
+        for ( Bundle bundle : item.getBundles() ) {
             for ( Bitstream b : bundle.getBitstreams() ) {
                 if (OK == processBitstream(b)) {
                     processed += 1;
@@ -108,13 +109,7 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
         Bitstream b = (Bitstream)subject;
 
         if (null != subject) {
-            boolean original = false;
-            for(Bundle bundle : b.getBundles()){
-                if("ORIGINAL".equals(bundle.getName())){
-                    original = true;
-                }
-            }
-            if (original && (Event.ADD == et || Event.CREATE == et)) {
+            if (Event.ADD == et || Event.CREATE == et) {
                 processBitstream(b);
             } else if (Event.DELETE == et || Event.REMOVE == et) {
                 // automatically removed
@@ -183,7 +178,21 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
             context.complete();
         }
 
+        // Skip the non ORIGINAL bitstreams after we've cleared the bitstream metadata
+        // earlier versions generated previews for LICENSE and other bundles
+        // this ensures those are cleared when the item is curated again.
         b.clearMetadata(schema, element, qualifier, Item.ANY);
+
+        boolean original = false;
+        for(Bundle bundle : b.getBundles()){
+            if("ORIGINAL".equals(bundle.getName())){
+                original = true;
+            }
+        }
+        if(!original){
+            b.update();
+            return SKIPPED;
+        }
 
         //
         try {
