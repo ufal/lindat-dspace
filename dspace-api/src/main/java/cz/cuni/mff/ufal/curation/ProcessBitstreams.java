@@ -128,7 +128,7 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
         return ret;
     }
 
-    static InputStream getIS(String mime, InputStream is) {
+    static InputStream getIS(String mime, InputStream is) throws CompressorException, ArchiveException {
 
 	    is = new BufferedInputStream(is);
 	    InputStream ret = null;
@@ -143,6 +143,7 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
                 }catch (CompressorException e){
                     log.error("Failed to extract known mime-type " + mime);
                     log.error(e);
+                    throw e;
                 }catch (ArchiveException e){
                     log.debug("Not a compressed archive (eg. .tgz)");
                 }
@@ -154,6 +155,7 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
                 }catch (ArchiveException e){
                     log.error("Failed to extract known archive mime-type=" + mime);
                     log.error(e);
+                    throw e;
                 }
                 break;
             default: break;
@@ -166,6 +168,12 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
     }
 
     static int addBitstreamContent(Bitstream b) throws SQLException, AuthorizeException {
+
+	    // Clear on all bitstream no matter if PUB or what bundle they are in
+        // In particular clean LICENSE preview and preview on RES items
+        b.clearMetadata(schema, element, qualifier, Item.ANY);
+        b.update();
+
         Context context = new Context(Context.READ_ONLY);
         context.setCurrentUser(null);
         try {
@@ -181,8 +189,6 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
         // Skip the non ORIGINAL bitstreams after we've cleared the bitstream metadata
         // earlier versions generated previews for LICENSE and other bundles
         // this ensures those are cleared when the item is curated again.
-        b.clearMetadata(schema, element, qualifier, Item.ANY);
-
         boolean original = false;
         for(Bundle bundle : b.getBundles()){
             if("ORIGINAL".equals(bundle.getName())){
@@ -212,7 +218,7 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
 	                b.addMetadata( schema, element, qualifier, Item.ANY, content );
 	                //don't add more than 1000 files
 	                if(++i >= 1000){
-	                    b.addMetadata(schema, element, qualifier, Item.ANY, "...");
+	                    b.addMetadata(schema, element, qualifier, Item.ANY, String.format("%s|%d", "...", 0));
 	                    break;
                     }
 	            }
@@ -223,6 +229,7 @@ public class ProcessBitstreams extends AbstractCurationTask implements Consumer 
             	b.addMetadata( schema, element, qualifier, Item.ANY, new String(cbuf) );
             }
         } catch (Exception e) {
+            log.error("Error on bitstream " + b.getID());
             log.error(e);
             return ERROR;
         }
