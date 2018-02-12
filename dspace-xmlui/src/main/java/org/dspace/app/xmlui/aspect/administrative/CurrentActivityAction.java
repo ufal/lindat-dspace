@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
+import cz.cuni.mff.ufal.dspace.IOUtils;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.acting.AbstractAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -148,7 +149,9 @@ public class CurrentActivityAction extends AbstractAction
 							bitAccessEvents = new LinkedList<>();
 							bitAccessCounter.put(event.getURL(), bitAccessEvents);
 						}
-						bitAccessEvents.add(event);
+						if(IOUtils.requestRangeContainsStart(request)) {
+							bitAccessEvents.add(event);
+						}
 						if (bitAccessEvents.size() > limit) {
 							//yell as this bitstream was accessed more than LIMIT times in the last 10 mins.
 							if(noRecentEmail(event.getURL(), old)) {

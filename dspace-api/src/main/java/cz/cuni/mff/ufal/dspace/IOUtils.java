@@ -20,7 +20,10 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class IOUtils {
 
@@ -197,6 +200,32 @@ public class IOUtils {
         }
         return message;
 	}	
-	
+
+	public static boolean requestRangeContainsStart(HttpServletRequest request){
+	    String rangeHeader = request.getHeader("range");
+	    try {
+			if (isNotBlank(rangeHeader)) {
+				String[] parts = rangeHeader.split("=", 2);
+				String unit = parts[0];
+				String ranges = parts[1].replaceAll(" ", "");
+				for (String range : ranges.split(",")) {
+					String[] rangeParts = range.split("-");
+					String start = rangeParts[0];
+					if ("0".equals(start.trim())) {
+						log.debug("Found zero in range header.");
+						return true;
+					}
+				}
+			} else {
+				// No range header -> always stream from start
+				return true;
+			}
+		}catch (Exception e){
+	    	// issue with parsing the header, assume we stream from beginning
+			return true;
+		}
+		log.debug("No zero in range header.");
+		return false;
+	}
 }
 

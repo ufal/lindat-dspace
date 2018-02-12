@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cz.cuni.mff.ufal.UFALLicenceAgreement;
 
+import cz.cuni.mff.ufal.dspace.IOUtils;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
@@ -720,7 +721,8 @@ public class BitstreamReader extends AbstractReader implements Recyclable
             }
         }
 
-        if(item!=null) { // item = null means special bitstream possibly a community logo
+        if(item!=null && IOUtils.requestRangeContainsStart(request)) { // item = null means special bitstream possibly a
+            // community logo
         	// Log download statistics
         	DSpaceApi.updateFileDownloadStatistics(userID, bitstreamID);
         }
