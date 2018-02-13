@@ -46,7 +46,7 @@ public class VLOCheck extends Check {
                 return "PLEASE configure lr.harvester.info.url";
             }
             String dspace_name = ConfigurationManager.getProperty("dspace.name");
-            dspace_name = dspace_name.replaceAll("[() ,/-]+","_");
+            dspace_name = dspace_name.replaceAll("[() ,/.\"-]+","_");
             dspace_name = StringUtils.stripAccents(dspace_name);
             harvesterInfoUrl = harvesterInfoUrl.endsWith("/") ? harvesterInfoUrl + dspace_name :
                     harvesterInfoUrl + "/" + dspace_name;
