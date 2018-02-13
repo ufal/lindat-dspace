@@ -1860,7 +1860,7 @@ public class ItemTest  extends AbstractDSpaceObjectTest
     public void testGetRelationChainNotNull() throws SQLException, AuthorizeException
     {
         context.turnOffAuthorisationSystem();
-        String handle = "123/456";
+        String handle = "123/123";
         HandleManager.createHandle(context, it, handle);
         context.commit();
         context.restoreAuthSystemState();
