@@ -1326,7 +1326,7 @@
                    <span class="caret">&#160;</span>
                    <div class="row">
                        <div class="col-sm-1">
-                           <ul class="dropdown-menu">
+                           <ul class="dropdown-menu" style="text-align:left;">
                            </ul>
                        </div>
                    </div>
