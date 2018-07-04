@@ -49,6 +49,7 @@ public class PiwikTracker implements Tracker
     public void trackPage(HttpServletRequest request, String pageName)
     {
 
+        log.debug("Piwik tracks " + pageName);
         String pageURL = getFullURL(request);
         tracker.setPageUrl(pageURL);
 
