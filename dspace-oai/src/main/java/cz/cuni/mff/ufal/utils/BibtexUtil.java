@@ -125,8 +125,7 @@ class BibtexString {
 		for (String ch : accents) {
 		    accentsWithUpper.add(ch);
 			String to_find = ch.substring(0, 1);
-			String to_change_with = ch.substring(1).replaceAll("\\\\",
-					"\\\\\\\\");
+			String to_change_with = ch.substring(1);
 			// uppercase only chars before } without space
 			int lbr_idx = to_change_with.length() - 1;
 			for (; 0 < lbr_idx; --lbr_idx) {
@@ -141,6 +140,9 @@ class BibtexString {
 			// we don't need/want certain upper case
 			// esp. in strings containing {\\"{\\I}} (or similar) don't replace the I with {\\I}
 			if(!blackListedUpperAccents.contains(to_find.toUpperCase())) {
+				if(to_change_with_upper.matches(".*\\{\\\\[A-Z]\\}}")){
+					to_change_with_upper = to_change_with_upper.replaceFirst("\\{\\\\([A-Z]\\})}", "$1");
+				}
 				accentsWithUpper.add(to_find.toUpperCase() + to_change_with_upper);
 			}
 		}
@@ -186,10 +188,10 @@ class BibtexString {
 			"œ{\\oe}", "æ{\\ae}", "å{\\aa}",  "þ{\\t h}", };
 
 	// without automatic uppercase
-	public static final String[] symbols_final = new String[] { "ß\\ss",
-			"£\\pounds", "§\\S", "©\\textcopyright", "ª\\textordfeminine",
-			"®\\textregistered", "¶\\P", "·\\textperiodcentered",
-			"º\\textordmasculine", "¿\\\\?? ", };
+	public static final String[] symbols_final = new String[]{"ß{\\ss}",
+			"£{\\pounds}", "§{\\S}", "©{\\textcopyright}", "ª{\\textordfeminine}",
+			"®{\\textregistered}", "¶{\\P}", "·{\\textperiodcentered}",
+			"º{\\textordmasculine}", "¿{?`} ",};
 
 	public static final String[] to_escape = new String[] { "?", "&", "$", "{",
 			"}", "%", "_", "#", };
