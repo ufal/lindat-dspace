@@ -1,6 +1,6 @@
 package cz.cuni.mff.ufal.dspace.rest;
 
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,7 +19,7 @@ public class FeaturedService{
         this.name = name;
         this.url = url;
         this.description = description;
-        links = new Hashtable<String, String>();
+        links = new LinkedHashMap<>();
     }
     
     public void addLink(String key, String value) {
