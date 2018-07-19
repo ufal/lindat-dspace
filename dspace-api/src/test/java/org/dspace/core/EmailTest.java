@@ -4,6 +4,7 @@ import org.dspace.servicemanager.config.DSpaceConfigurationService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.utils.DSpace;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.*;
 
 import static org.junit.Assert.*;
 
+@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Email.class, DSpace.class})
 public class EmailTest{
