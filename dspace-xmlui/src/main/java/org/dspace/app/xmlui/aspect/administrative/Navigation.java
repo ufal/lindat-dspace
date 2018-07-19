@@ -135,11 +135,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
             return HashUtil.hash(key.toString());
         }
 
-        if(context.getCurrentUser().getEmail() != null) {
-            return HashUtil.hash(context.getCurrentUser().getEmail());
-        }else{
-            return HashUtil.hash(context.getCurrentUser().getNetid());
-        }
+        return HashUtil.hash(context.getCurrentUser().getEmail());
     }
 	
     /**
