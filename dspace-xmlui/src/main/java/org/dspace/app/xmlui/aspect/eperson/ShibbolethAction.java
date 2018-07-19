@@ -75,8 +75,22 @@ public class ShibbolethAction extends AbstractAction
                 Request request = ObjectModelHelper.getRequest(objectModel);
             	// The user has successfully logged in
             	String redirectURL = request.getContextPath();
-            	
-            	if (AuthenticationUtil.isInterupptedRequest(objectModel))
+
+                String email = eperson.getEmail();
+
+                // ufal/clarin-dspace#868 redirect to set-email must take priority over resumeInterruptedRequest
+                if (email == null) {
+                    redirectURL = request.getContextPath() + "/set-email";
+
+                }else if ( null == eperson.getWelcome() &&
+                        ConfigurationManager.getBooleanProperty("lr", "lr.login.welcome.message", false) )
+                {
+                    // tocheck: users without emails should not be authenticated unless
+                    // emails are provided
+                    redirectURL = request.getContextPath() + "/welcome-message";
+                    request.getSession().setAttribute("shib.welcome", request.getSession().getAttribute("shib.welcome"));
+                }
+                else if (AuthenticationUtil.isInterupptedRequest(objectModel))
             	{
             		// Resume the request and set the redirect target URL to
             		// that of the originally interrupted request.
@@ -97,19 +111,6 @@ public class ShibbolethAction extends AbstractAction
             	
                 // Authentication successful - send a redirect.
                 final HttpServletResponse httpResponse = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-                
-            	String email = eperson.getEmail();
-            	if (email == null) {
-            		redirectURL = request.getContextPath() + "/set-email";
-
-            	}else if ( null == eperson.getWelcome() && 
-            	        ConfigurationManager.getBooleanProperty("lr", "lr.login.welcome.message", false) ) 
-            	{
-                    // tocheck: users without emails should not be authenticated unless
-                    // emails are provided
-                    redirectURL = request.getContextPath() + "/welcome-message";
-                    request.getSession().setAttribute("shib.welcome", request.getSession().getAttribute("shib.welcome"));
-            	}
                 
                 httpResponse.sendRedirect(redirectURL);
                 
