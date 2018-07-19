@@ -339,7 +339,8 @@ registration, forgotten passwords, editing profiles, and changing passwords.
                 </map:match>
             
                 <map:match pattern="set-email/finished">
-                    <map:transform type="RegistrationFinished"/>
+                    <!-- map:transform type="RegistrationFinished"/ -->
+                    <map:transform type="WelcomeLogin"/>
                 </map:match>
             
                 <!-- Exception states -->
