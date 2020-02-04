@@ -9,7 +9,7 @@
 
 # clarin-dspace deployments
 
-* LINDAT/CLARIN: https://lindat.mff.cuni.cz/repository/xmlui/
+* LINDAT/CLARIAH-CZ: https://lindat.mff.cuni.cz/repository/xmlui/
 * CLARINO: https://repo.clarino.uib.no/xmlui/
 * CLARIN.SI: https://www.clarin.si/repository/xmlui/
 * CLARIN-PL: https://clarin-pl.eu/dspace/

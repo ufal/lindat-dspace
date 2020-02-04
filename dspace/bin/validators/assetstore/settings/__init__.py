@@ -13,7 +13,7 @@ settings = {
 
 
     # name
-    "name": u"LINDAT/CLARIN file integrity checker",
+    "name": u"LINDAT/CLARIAH-CZ file integrity checker",
 
     # logger config - read from _logger
     "logger_config": os.path.join(

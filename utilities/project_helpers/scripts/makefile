@@ -199,7 +199,7 @@ install_guru:   print_message \
 
 install_dspace: 
 	@if test -L $(DIR_LINDAT_THEME_IN_WEBAPPS); then unlink $(DIR_LINDAT_THEME_IN_WEBAPPS); fi
-	@echo "DEPLOYING LINDAT/CLARIN DSpace ..."
+	@echo "DEPLOYING CLARIN-DSpace ..."
 	@cd $(DIR_BUILD) &&  $(ANT_WITH_CONF) update 2>&1 | $(HIDE_PASSW) | tee $(DIR_DEPLOY_LOGS)/$@.log 
 	@$(MAKE) clean_installation
 	@echo "INSTALLATION SUCCESSFUL ..."
@@ -213,7 +213,7 @@ postinstall:
 	@echo "DEPLOYMENT (INSTALL + POSTINSTALL) SUCCESSFUL"
 
 fresh_install:
-	@echo "INSTALLING FRESH LINDAT/CLARIN DSpace ..."
+	@echo "INSTALLING FRESH CLARIN-DSpace ..."
 	@cd $(DIR_BUILD) && $(ANT_WITH_CONF) fresh_install 2>&1 | $(HIDE_PASSW) | tee $(DIR_DEPLOY_LOGS)/$@.log 
 
 # Grant rights to installation

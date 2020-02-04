@@ -21,7 +21,7 @@
 	<xsl:template match="/">
 		<html>
 			<head>
-                <title>LINDAT/CLARIN OAI-PMH Data Provider Endpoint</title>
+                <title>LINDAT/CLARIAH-CZ OAI-PMH Data Provider Endpoint</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                 <script src="static/js/jquery.js" type="text/javascript"></script>
@@ -35,7 +35,7 @@
                 <div class="container">
                     <div class="navbar navbar-default" role="navigation">
                         <div class="navbar-header">
-                            <a class="navbar-brand" href="#">LINDAT/CLARIN OAI-PMH Data Provider Endpoint</a>
+                            <a class="navbar-brand" href="#">LINDAT/CLARIAH-CZ OAI-PMH Data Provider Endpoint</a>
                         </div>
                         <div class="navbar-collapse collapse">
                             <ul class="nav navbar-nav navbar-right">

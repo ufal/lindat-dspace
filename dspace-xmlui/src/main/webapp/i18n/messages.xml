@@ -24,7 +24,7 @@
 		-->
 
 	<!-- General keys -->
-    <message key="xmlui.general.dspace_home">LINDAT/CLARIN Repository Home</message>
+    <message key="xmlui.general.dspace_home">LINDAT/CLARIAH-CZ Repository Home</message>
 	<message key="xmlui.general.search">Search</message>
 	<message key="xmlui.general.go">Go</message>
     <message key="xmlui.general.go_home">Back to repository homepage</message>
@@ -74,7 +74,7 @@
 	<!--
 		This section is for feed syndication (RSS, atom, etc)
 	-->
-    <message key="xmlui.feed.general_description">The LINDAT/CLARIN digital repository system captures, stores, indexes, preserves, and distributes digital research material.</message>
+    <message key="xmlui.feed.general_description">The LINDAT/CLARIAH-CZ digital repository system captures, stores, indexes, preserves, and distributes digital research material.</message>
     <message key="xmlui.feed.header">RSS Feeds</message>
 	<message key="xmlui.feed.logo_title">The Channel Image</message>
 	<message key="xmlui.feed.untitled">Untitled</message>
@@ -611,7 +611,7 @@
     <!-- org.dspace.app.xmlui.eperson.WelcomeLogin.java -->
     <message key="xmlui.EPerson.WelcomeLogin.title">Welcome message</message>
     <message key="xmlui.EPerson.WelcomeLogin.trail">Welcome message</message>
-    <message key="xmlui.EPerson.WelcomeLogin.head1">Welcome to LINDAT/CLARIN Repository</message>
+    <message key="xmlui.EPerson.WelcomeLogin.head1">Welcome to LINDAT/CLARIAH-CZ Repository</message>
     <message key="xmlui.EPerson.WelcomeLogin.head2">Privacy Statement</message>
     <message key="xmlui.EPerson.WelcomeLogin.para1">The information released by your IdP (home organisation) is shown below.</message>
     <message key="xmlui.EPerson.WelcomeLogin.warn1"><div class="bold text-error">We use only the required attributes as stated in <a href="http://lindat.mff.cuni.cz/privacypolicy.html" target="_blank" class="bold">http://lindat.mff.cuni.cz/privacypolicy.html</a>.<BR />However, we may log the attributes and keep them for a time period.</div></message>
@@ -2939,7 +2939,7 @@
 
     <!-- ufal theme -->
   <message key="UFAL.firstpage.title">Repository</message>
-  <message key="UFAL.firstpage.title.text">Welcome to LINDAT/CLARIN - Centre for Language Research Infrastructure in the Czech Republic</message>
+  <message key="UFAL.firstpage.title.text">Welcome to LINDAT/CLARIAH-CZ - Centre for Language Research Infrastructure in the Czech Republic</message>
 
   <!-- UFAL/lib/xsl/aspect/artifactbrowser/item-list.xsl -->
   <message key="xmlui.UFAL.artifactbrowser.item-contains-one-file">This item contains {0} file ({1}).</message>

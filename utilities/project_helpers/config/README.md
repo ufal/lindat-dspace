@@ -1,4 +1,4 @@
-LINDAT/CLARIN configuration
+LINDAT/CLARIAH-CZ configuration
 ----------------------------
 
 Rename `local.conf.dist` to `local.conf` and update the variables accordingly.

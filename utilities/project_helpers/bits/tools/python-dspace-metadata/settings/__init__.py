@@ -13,7 +13,7 @@ settings = {
 
 
     # name
-    "name": u"LINDAT/CLARIN metadata inspection",
+    "name": u"LINDAT/CLARIAH-CZ metadata inspection",
 
     # check for db params
     "dspace_cfg_relative": "../../../sources/dspace/config/dspace.cfg",
