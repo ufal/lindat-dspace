@@ -229,27 +229,28 @@ public class MetadataExposure
                         hiddenElementSets.get(segment[0]).add(segment[1]);
                     }
                     
-                    if(value != null && !value.equals("") && !"true".equals(value)){
-                    	//select schema
-                    	Map<String, Map<String,String>> elements = hiddenConditions.get(segment[0]);
-                    	if(elements == null){
-                    		elements = new HashMap<String, Map<String,String>>();
-                    		hiddenConditions.put(segment[0], elements);
-                    	}
-                    	//select element
-                    	Map<String,String> qualifiers = elements.get(segment[1]);
-                    	if(qualifiers == null){
-                    		qualifiers = new HashMap<String,String>();
-                    		elements.put(segment[1], qualifiers);
-                    	}
-                    	qualifiers.put(qualifier, value);
-                    }
-
                     // oops..
                     else
                     {
                         log.warn("Bad format in hidden metadata directive, field=\""+mdField+"\", config property="+key);
                     }
+
+                    if(value != null && !value.equals("") && !"true".equals(value)){
+                        //select schema
+                        Map<String, Map<String,String>> elements = hiddenConditions.get(segment[0]);
+                        if(elements == null){
+                            elements = new HashMap<String, Map<String,String>>();
+                            hiddenConditions.put(segment[0], elements);
+                        }
+                        //select element
+                        Map<String,String> qualifiers = elements.get(segment[1]);
+                        if(qualifiers == null){
+                            qualifiers = new HashMap<String,String>();
+                            elements.put(segment[1], qualifiers);
+                        }
+                        qualifiers.put(qualifier, value);
+                    }
+
                 }
             }
         }
