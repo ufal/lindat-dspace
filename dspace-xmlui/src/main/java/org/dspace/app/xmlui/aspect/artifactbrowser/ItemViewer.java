@@ -469,6 +469,11 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
     private static class GoogleDataset{
         private static final Set<String> mandatoryFields = new HashSet<>();
         private static final HashMap<String, String> google2dspace = new HashMap<>();
+        // https://developers.google.com/search/docs/data-types/dataset#dataset specifies that description must be
+        // between 50 and 5000 characters
+        public static final int minDescriptionLength = 50;
+        public static final int maxDescriptionLength = 5000;
+
         static {
             mandatoryFields.add("name");
             mandatoryFields.add("description");
@@ -523,12 +528,12 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
 
         private void convertToValidValues(JsonObject jsonObject) {
             String description = jsonObject.get("description").getAsString();
-            if(description.length() < 50){
-                int fill = 50 - description.length();
+            if(description.length() < minDescriptionLength){
+                int fill = minDescriptionLength - description.length();
                 String filler = StringUtils.repeat('.', fill);
                 jsonObject.addProperty("description", description + filler);
-            }else if(description.length() > 5000){
-                jsonObject.addProperty("description", description.substring(0, 5000));
+            }else if(description.length() > maxDescriptionLength){
+                jsonObject.addProperty("description", description.substring(0, maxDescriptionLength));
             }
 
             if(jsonObject.has("creator")){
