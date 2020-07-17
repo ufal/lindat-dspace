@@ -156,10 +156,9 @@
             
             
 			<xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='include-library'][@qualifier='jqplot']">
-				<link rel="stylesheet" href="{$theme-path}/lib/js/jqplot/jquery.jqplot.css"> </link>
-				<link rel="stylesheet" href="{$theme-path}/lib/css/jqplot.css"> </link>
-				<link rel="stylesheet" href="{$theme-path}/lib/css/daterangepicker.css"> </link>
-	        	</xsl:if>            
+				<link rel="stylesheet" href="{$theme-path}/lib/js/piwik-charts/lib/jqplot/jquery.jqplot.css"> </link>
+				<link rel="stylesheet" href="{$theme-path}/lib/js/piwik-charts/lib/css/jqplot.css"> </link>
+	        	</xsl:if>
             
             <!-- select2 -->
             <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='include-library'][@qualifier='select2']">
@@ -590,18 +589,18 @@
         -->
         
         <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='include-library'][@qualifier='jqplot']">
-        	<script type="text/javascript" src="{$theme-path}/lib/js/jqplot/jquery.jqplot.min.js">&#160;</script>
-            <script type="text/javascript" src="{$theme-path}/lib/js/jqplot/plugins/jqplot.canvasTextRenderer.min.js">&#160;</script>
-            <script type="text/javascript" src="{$theme-path}/lib/js/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js">&#160;</script>
-            <script type="text/javascript" src="{$theme-path}/lib/js/jqplot/plugins/jqplot.highlighter.min.js">&#160;</script>
-            <script type="text/javascript" src="{$theme-path}/lib/js/jqplot/plugins/jqplot.cursor.min.js">&#160;</script>
-            <script type="text/javascript" src="{$theme-path}/lib/js/jqplot/plugins/jqplot.dateAxisRenderer.min.js">&#160;</script>
-            <script type="text/javascript" src="{$theme-path}/lib/js/jqplot/plugins/jqplot.enhancedLegendRenderer.js">&#160;</script>
-            <script type="text/javascript" src="{$theme-path}/lib/js/jqplot/plugins/jqplot.barRenderer.min.js">&#160;</script>            
-            <script type="text/javascript" src="{$theme-path}/lib/js/piwik_charts.js">&#160;</script>
-            <script type="text/javascript" src="{$theme-path}/lib/js/moment.min.js">&#160;</script>
-            <script type="text/javascript" src="{$theme-path}/lib/js/daterangepicker.js">&#160;</script>
-        </xsl:if>        
+        	<script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/lib/jqplot/jquery.jqplot.min.js">&#160;</script>
+            <script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/lib/jqplot/plugins/jqplot.canvasTextRenderer.min.js">&#160;</script>
+            <script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/lib/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js">&#160;</script>
+            <script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/lib/jqplot/plugins/jqplot.highlighter.min.js">&#160;</script>
+            <script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/lib/jqplot/plugins/jqplot.cursor.min.js">&#160;</script>
+            <script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/lib/jqplot/plugins/jqplot.dateAxisRenderer.min.js">&#160;</script>
+            <script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/lib/jqplot/plugins/jqplot.enhancedLegendRenderer.js">&#160;</script>
+            <script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/lib/jqplot/plugins/jqplot.barRenderer.min.js">&#160;</script>
+	    <script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/js/piwik_charts.js">&#160;</script>
+            <script type="text/javascript" src="{$theme-path}/lib/js/piwik-charts/lib/moment/moment.min.js">&#160;
+            </script>
+        </xsl:if>
         
         <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='include-library'][@qualifier='datepicker']">
             <script type="text/javascript" src="{$theme-path}/lib/bootstrap/js/bootstrap-datepicker.js">&#160;</script>
