@@ -2866,7 +2866,6 @@ Google Analytics Statistics Aspect
   <message key="xmlui.UFAL.artifactbrowser.authors">Avtorji</message>
   <message key="xmlui.UFAL.artifactbrowser.project.code">Koda projekta: {0}</message>
   <message key="xmlui.UFAL.artifactbrowser.project.name">Ime projekta: {0}</message>
-  <message key="xmlui.UFAL.artifactbrowser.piwik.views">Ogledi skozi čas</message>
   <message key="xmlui.UFAL.artifactbrowser.item_view.replaced_one">Ta vnos je bil nadomeščen z novejšim.</message>
   <message key="xmlui.UFAL.artifactbrowser.item_view.replaced_many">Ta vnos je bil nadomeščen z novejšimi.</message>
   <message key="xmlui.UFAL.artifactbrowser.item_view.versions_dt">Druge različice</message>
