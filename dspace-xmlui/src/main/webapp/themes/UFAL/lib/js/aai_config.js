@@ -33,6 +33,7 @@ jQuery(document).ready(
                     '<p  style="" ><input type="submit" style="margin: 20px 2px" name="submit" value="Sign in" /></p>' +
                     '</form>';
             instance.target = instance.target + "shibboleth-login";
+            instance.autoInitialize = false;
             return instance;
         })();
         if (!("aai" in window)) {

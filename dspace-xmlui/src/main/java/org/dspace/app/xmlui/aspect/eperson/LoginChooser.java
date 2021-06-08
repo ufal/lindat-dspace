@@ -232,26 +232,9 @@ public class LoginChooser extends AbstractDSpaceTransformer implements
                                             : ("?" + request.getQueryString()));
                     loginURL = location.toString();
                 }
-					if (ShibAuthentication.class.getName().equals(authMethod.getClass().getName())) {
-						Item item = list.addItem();
-						item.addXref("#", message("Unified Login"), "signon label label-important");
-						//item.addFigure("./themes/UFAL/images/discojuice-logo.png", "#", "signon"); // comment to the link
-						item = list.addItem();
-						//Message discoComment = message("xmlui.EPerson.LoginChooser.discojuiceComment");
-						//item.addContent(discoComment);
-	
-						// Eduid link item = list.addItem();
-						//item.addFigure("./themes/UFAL/images/eduid-logo.png", loginURL, null);
-						//item.addXref(loginURL, "eduID.cz Login", "label label-important");
-						//final Message eduidComment = message("xmlui.EPerson.LoginChooser.eduidComment");
-						//item.addContent(eduidComment);
-					} else { // Normal Render
-						//final Item item = list.addItem();
-						//final Message otherwiseComment = message("xmlui.EPerson.LoginChooser.otherwiseComment");
-						// XXX not flexible if more auth methods
-						//item.addContent(otherwiseComment);
-						//item.addXref(loginURL, message(authTitle));
-					}
+                final Item item = list.addItem();
+                item.addXref(loginURL, message(authTitle));
+
 				}
 
             }
